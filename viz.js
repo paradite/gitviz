@@ -1,20 +1,27 @@
 var API_BASE_URL = "https://api.github.com"
-
 var API_USER = "/users/";
 var API_PUBLIC_EVENTS = "/events/public";
 
+
+var parseDate = d3.time.format("%Y-%m-%dT%H:%M:%SZ").parse,
+    formatDate = d3.time.format("%H:%M:%S %d %b"),
+    formatDateForQuery = d3.time.format("%Y-%m-%dT%H:%M:%SZ"),
+    formatTime = d3.time.format("%H:%M:%S");
+
 var margin = {
-    top: 20,
-    right: 0,
-    bottom: 40,
-    left: 70
+    top: 100,
+    right: 100,
+    bottom: 100,
+    left: 100
 };
 
-var width = window.innerWidth * 0.8 - margin.left - margin.right,
-    height = window.innerHeight * 0.8 - margin.top - margin.bottom,
+var width = window.innerWidth - margin.left - margin.right,
+    height = window.innerHeight * 0.9 - margin.top - margin.bottom,
     barHeight = 30;
 
 var commits = [];
+
+var currentRowNum = 0, rowHeight = 20;
 
 var svgWrapper = d3.select("#viz")
     .attr("width", width + margin.left + margin.right)
@@ -29,14 +36,9 @@ function filterPushEvents(event) {
 }
 
 function getCommitsFromPushes(data) {
-    //console.log(JSON.stringify(data, null, 4));
     data.forEach(function (d) {
         commits = commits.concat(d["payload"]["commits"]);
     });
-    //commits = commits.map(function(d){
-    //    return d["url"];
-    //});
-    //console.log(commits);
     return commits;
 }
 
@@ -48,29 +50,48 @@ function getTextForDisplay(d) {
     }
 }
 
-function refreshDisplay(data) {
-    var rows = chart.selectAll("text")
+function displayCommits(user, data) {
+    console.log(chart);
+    var row = chart.select("." + user)
+        .selectAll("circle")
         .data(data);
 
-    rows.attr("x", xMap)
-        .attr("y", function(d, i) {return barHeight * (i + 1)})
-        .text(getTextForDisplay);
+    var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-5, 0])
+        .html(function(d) { return getTextForDisplay(d); });
+    svgWrapper.call(tip);
+
+    row.enter()
+        .append("circle")
+        .attr("r", 2.5)
+        .attr("cx", xMap)
+        .attr("cy", 0)
+        .style("fill", "red")
+        .on('mouseover', tip.show)
+        .on('mouseout', tip.hide);
 }
 
-function displayData(data) {
-    var rows = chart.selectAll("text")
-        .data(data);
+function initRow(user, rowNum) {
+    var row = chart.append("g")
+        .attr("transform", "translate(0," + (rowNum)*rowHeight + ")")
+        .classed(user, true);
 
-    rows.enter()
-        .append("text")
-        .attr("x", xMap)
-        .style("text-anchor", "start");
+    row.append("line")
+        .attr("x1", 0)
+        .attr("y1", 0)
+        .attr("x2", width)
+        .attr("y2", 0)
+        .attr("stroke-width", 1)
+        .attr("stroke", "black");
 
-    rows.attr("y", function(d, i) {return barHeight * (i + 1)})
-        .text(getTextForDisplay);
+    row.append("text")
+        .text(user)
+        .attr("y", 3)
+        .style("dominant-baseline", "text-before-edge");
 }
 
-function fetchCommitDetails() {
+function fetchCommitDetails(user, commits, cb) {
     var commitsRemaining = 0;
     commits.forEach(function(d){
         commitsRemaining++;
@@ -83,26 +104,30 @@ function fetchCommitDetails() {
                 commitsRemaining--;
                 if(commitsRemaining === 0){
                     updateAxis();
-                    console.log(commits);
                     commits.sort(sortTime);
                     console.log(commits);
-                    refreshDisplay(commits);
+                    cb(user, commits);
                 }
             }
         });
         //console.log(d);
     });
 }
+
 function updateAxis() {
     xScale.domain(d3.extent(commits, getDateValue));
 
     var xAxis = d3.svg.axis()
         .scale(xScale)
         .orient("bottom")
-        .ticks(5);
+        .ticks(d3.time.day, 1)
+        .ticks(d3.time.days, 1)
+        .tickFormat(d3.time.format('%d %b'))
+        .tickSize(0);
 
     xAxisElement.call(xAxis);
 }
+
 function getPubEvent (user) {
     var url = API_BASE_URL + API_USER + user + API_PUBLIC_EVENTS;
     d3.json(url, function(err, data){
@@ -110,8 +135,9 @@ function getPubEvent (user) {
             console.log(err);
         } else {
             commits = getCommitsFromPushes(data.filter(filterPushEvents));
-            displayData(commits);
-            fetchCommitDetails();
+            initRow(user, currentRowNum);
+            fetchCommitDetails(user, commits, displayCommits);
+            currentRowNum++;
         }
     });
 }
@@ -123,7 +149,8 @@ container.append("rect")
 
 var chart = container.append("g")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .classed("chart", true);
 
 // x-axis
 function getDateValue(d) {
@@ -146,8 +173,6 @@ function timeLabelFormat(d) {
 }
 
 function sortTime(d1, d2) {
-    console.log(d1.date + " " + d2.date);
-    console.log(d1.date < d2.date);
     if(d1.date < d2.date) {
         return -1;
     } else if(d1.date == d2.date) {
@@ -157,29 +182,18 @@ function sortTime(d1, d2) {
     }
 }
 
-var xScale = d3.time.scale().range([0, width]);
+var xScale = d3.time.scale().range([5, width - 5]);
 
 var xAxisElement = container.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")");
 
-xAxisElement.append("text")
-    .attr("class", "x-axis-label")
-    .attr("x", width)
-    .attr("y", 35)
-    .style("text-anchor", "end")
-    .text("time");
-
-//container.append("text")
-//	.text('hello')
-//	.attr('x', 10)
-//	.attr('y', 10)
-//	.attr("fill", "red");
+// xAxisElement.append("text")
+//     .attr("class", "x-axis-label")
+//     .attr("x", width)
+//     .attr("y", 35)
+//     .style("text-anchor", "end")
+//     .text("time");
 
 getPubEvent("paradite");
 
-
-var parseDate = d3.time.format("%Y-%m-%dT%H:%M:%SZ").parse,
-    formatDate = d3.time.format("%H:%M:%S %d %b"),
-    formatDateForQuery = d3.time.format("%Y-%m-%dT%H:%M:%SZ"),
-    formatTime = d3.time.format("%H:%M:%S");
