@@ -28,7 +28,7 @@ var defaultUsers = [{
 var defaultOrgs = ["nus-fboa2016-si"];
 
 var parseDate = d3.time.format("%Y-%m-%dT%H:%M:%SZ").parse,
-  formatDate = d3.time.format("%H:%M:%S %d %b"),
+  formatDate = d3.time.format("%d %b %H:%M:%S"),
   formatDateForQuery = d3.time.format("%Y-%m-%dT%H:%M:%SZ"),
   formatTime = d3.time.format("%H:%M:%S");
 
@@ -53,14 +53,6 @@ myChart.init();
 
 function filterPushEvents(event) {
   return event.type === "PushEvent";
-}
-
-function getTextForDisplay(d) {
-  if (d.date) {
-    return formatTime(d.date) + " " + d["author"]["name"] + " " + d["message"];
-  } else {
-    return d["author"]["name"] + " " + d["message"];
-  }
 }
 
 function updateAxis() {

@@ -21,6 +21,15 @@ function chart(width, height, margin) {
   module.height = height;
 
 
+  function getTextForDisplay(d) {
+    if (d.date) {
+      return "<span class=\"secondary\">" + formatDate(d.date) + " " + d["author"]["name"] + "</span> " + d["message"];
+    } else {
+      return d["author"]["name"] + " " + d["message"];
+    }
+  }
+
+
   module.init = function() {
     var svgWrapper = d3.select("body")
       .append("svg")
@@ -81,8 +90,8 @@ function chart(width, height, margin) {
 
     // update position
     row.attr("cx", function(d) {
-        return _xScale(dateAccessor(d));
-      });
+      return _xScale(dateAccessor(d));
+    });
   }
 
   module.initRow = function(user, rowNum) {
