@@ -4,9 +4,14 @@
     shape-rendering: crispEdges;
   }
 
-  body {
-    margin: 0;
+body {
+    margin: 8px;
   }
+
+.title {
+  width: 100%;
+  text-align: center;
+}
 
 .d3-tip .secondary {
   color: #cccccc;

@@ -6,8 +6,6 @@ function chart(width, height, margin) {
   if (!(this instanceof chart))
     return new chart(width, height, margin);
 
-  var rowHeight = 60;
-
   var _chartElement = null;
   var _svgWrapper = null;
   var _xAxisElement = null;
@@ -82,7 +80,7 @@ function chart(width, height, margin) {
 
     row.enter()
       .append("circle")
-      .attr("r", 2.5)
+      .attr("r", 3.5)
       .attr("cy", 0)
       .style("fill", "red")
       .on('mouseover', tip.show)

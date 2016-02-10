@@ -33,17 +33,22 @@ var parseDate = d3.time.format("%Y-%m-%dT%H:%M:%SZ").parse,
   formatTime = d3.time.format("%H:%M:%S");
 
 var margin = {
-  top: 50,
-  right: 100,
+  top: 100,
+  right: 200,
   bottom: 50,
-  left: 100
+  left: 200
 };
+
+
+var rowHeight = 60;
 
 var currentRowNum = 0;
 
 var width = window.innerWidth - margin.left - margin.right,
   height = window.innerHeight * 0.9 - margin.top - margin.bottom,
   barHeight = 30;
+
+height = rowHeight * defaultUsers.length;
 
 var commits = [];
 
