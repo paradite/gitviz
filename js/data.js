@@ -44,7 +44,7 @@ var data = (function() {
     data.forEach(function(event) {
       if (event["payload"]["commits"]) {
         event["payload"]["commits"].forEach(function(commit) {
-          if (user.email === (commit["author"]["email"])) {
+          if (isCommitValid(user, commit)) {
             _commits[user.username].push(commit);
           } else {
             // console.log("commit from others");
@@ -54,6 +54,14 @@ var data = (function() {
       }
       // _commits[user] = _commits[user].concat(event["payload"]["commits"]);
     });
+  }
+
+  var isCommitValid = function(user, commit) {
+    if(user.email === (commit["author"]["email"])){
+      return true;
+    } else {
+      return false;
+    }
   }
 
   var _fetchCommitDetails = function(user, cb) {
@@ -71,8 +79,13 @@ var data = (function() {
           console.log(err);
         } else {
           //console.log(res);
-          d.date = parseDate(res["commit"]["author"]["date"]);
           commitsRemaining--;
+          var commitDate = parseDate(res["commit"]["author"]["date"]);
+          if(isCommitTooEarly(commitDate)){
+            console.log("too ealry");
+            return;
+          }
+          d.date = commitDate;
           // if (commitsRemaining === 0) {
           // _commits[user].sort(sortTime);
           cb(user, _commits[user.username]);
@@ -81,6 +94,14 @@ var data = (function() {
       });
       //console.log(d);
     });
+  }
+
+
+
+  var _ValidDateEarliest = new Date(2016, 0, 11); // Semester start at Jan 11
+
+  var isCommitTooEarly = function(date) {
+    return date < _ValidDateEarliest;
   }
 
   module.getDomain = function(accessor) {
