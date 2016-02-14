@@ -5,7 +5,7 @@
   }
 
 body {
-    margin: 8px;
+    margin: 0px;
   }
 
 .title {
@@ -13,6 +13,42 @@ body {
   text-align: center;
 }
 
+.gone {
+  display: none !important;
+}
+
+.loading-text,
+.loading-text:hover,
+.loading-text:focus {
+  cursor: auto;
+  text-decoration: none;
+  font-size: 16px;
+  color: white;
+  margin: 5px 15px;
+  display: inline-block;
+}
+
+.overlay {
+  display: table;
+  background-color: #6475de;
+  text-align: center;
+  vertical-align: middle;
+  z-index: 100;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.95;
+}
+
+.overlay-center {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  height: 400px;
+  margin: 0 auto;
+}
+
+// Tooltips
 .d3-tip .secondary {
   color: #cccccc;
   font-size: 13px;

@@ -10,6 +10,13 @@ function chart(width, height, margin) {
   var _svgWrapper = null;
   var _xAxisElement = null;
 
+  var COMMIT_STYLE = {
+    fill: "white",
+    color: "green",
+    r: 3.5,
+    "stroke-width": 2
+  }
+
   var _xScale = d3.time.scale().range([5, width - 5]);
 
   var module = {};
@@ -18,6 +25,15 @@ function chart(width, height, margin) {
   module.width = width;
   module.height = height;
 
+
+  function applyStyle(style, tip) {
+    this.attr("r", style.r)
+      .attr("fill", style.fill)
+      .attr("stroke", style.color)
+      .attr("stroke-width", style["stroke-width"])
+      .on('mouseover', tip.show)
+      .on('mouseout', tip.hide);
+  }
 
   function getTextForDisplay(d) {
     if (d.date) {
@@ -67,7 +83,7 @@ function chart(width, height, margin) {
 
   module.displayCommits = function(user, data) {
     var row = _chartElement.select("." + user.username)
-      .selectAll("circle")
+      .selectAll("circle.commit")
       .data(data);
 
     var tip = d3.tip()
@@ -80,11 +96,9 @@ function chart(width, height, margin) {
 
     row.enter()
       .append("circle")
-      .attr("r", 3.5)
-      .attr("cy", 0)
-      .style("fill", "red")
-      .on('mouseover', tip.show)
-      .on('mouseout', tip.hide);
+      .classed("commit", true);
+
+    applyStyle.call(row, COMMIT_STYLE, tip);
 
     // update position
     row.attr("cx", function(d) {

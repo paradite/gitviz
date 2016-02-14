@@ -2,6 +2,13 @@
 
 // Data manipulation logic
 var data = (function() {
+
+  var API_BASE_URL = "https://api.github.com";
+  var API_USER = "/users/";
+  var API_PUBLIC_EVENTS = "/events/public";
+  var API_ORG = "/orgs/";
+  var API_EVENTS = "/events";
+
   var _commits = {};
 
   var module = {};
@@ -9,31 +16,31 @@ var data = (function() {
   module.getOrgEvent = function(org, cb) {
     var url = API_BASE_URL + API_ORG + org + API_EVENTS;
     d3.json(url)
-    .header("Authorization", "Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==")
-    .get(function(err, data) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(data.filter(filterPushEvents));
-        // _updateCommitsFromPushes(user, data.filter(filterPushEvents));
-        // _fetchCommitDetails(user, cb);
-      }
-    });
+      .header("Authorization", "Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==")
+      .get(function(err, data) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(data.filter(filterPushEvents));
+          // _updateCommitsFromPushes(user, data.filter(filterPushEvents));
+          // _fetchCommitDetails(user, cb);
+        }
+      });
   };
 
   module.getPubEvent = function(user, cb) {
     console.log(user);
     var url = API_BASE_URL + API_USER + user.username + API_PUBLIC_EVENTS;
     d3.json(url)
-    .header("Authorization", "Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==")
-    .get(function(err, data) {
-      if (err) {
-        console.log(err);
-      } else {
-        _updateCommitsFromPushes(user, data.filter(filterPushEvents));
-        _fetchCommitDetails(user, cb);
-      }
-    });
+      .header("Authorization", "Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==")
+      .get(function(err, data) {
+        if (err) {
+          console.log(err);
+        } else {
+          _updateCommitsFromPushes(user, data.filter(filterPushEvents));
+          _fetchCommitDetails(user, cb);
+        }
+      });
   };
 
   var _updateCommitsFromPushes = function(user, data) {
@@ -57,7 +64,7 @@ var data = (function() {
   }
 
   var isCommitValid = function(user, commit) {
-    if(user.email === (commit["author"]["email"])){
+    if (user.email === (commit["author"]["email"])) {
       return true;
     } else {
       return false;
@@ -73,25 +80,25 @@ var data = (function() {
     _commits[user.username].forEach(function(d) {
       commitsRemaining++;
       d3.json(d.url)
-      .header("Authorization", "Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==")
-      .get(function(err, res) {
-        if (err) {
-          console.log(err);
-        } else {
-          //console.log(res);
-          commitsRemaining--;
-          var commitDate = parseDate(res["commit"]["author"]["date"]);
-          if(isCommitTooEarly(commitDate)){
-            console.log("too ealry");
-            return;
+        .header("Authorization", "Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==")
+        .get(function(err, res) {
+          if (err) {
+            console.log(err);
+          } else {
+            //console.log(res);
+            commitsRemaining--;
+            var commitDate = parseDate(res["commit"]["author"]["date"]);
+            if (isCommitTooEarly(commitDate)) {
+              console.log("too ealry");
+              return;
+            }
+            d.date = commitDate;
+            // if (commitsRemaining === 0) {
+            // _commits[user].sort(sortTime);
+            cb(user, _commits[user.username]);
+            // }
           }
-          d.date = commitDate;
-          // if (commitsRemaining === 0) {
-          // _commits[user].sort(sortTime);
-          cb(user, _commits[user.username]);
-          // }
-        }
-      });
+        });
       //console.log(d);
     });
   }

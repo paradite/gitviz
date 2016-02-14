@@ -1,36 +1,28 @@
-var API_BASE_URL = "https://api.github.com";
-var API_USER = "/users/";
-var API_PUBLIC_EVENTS = "/events/public";
-var API_ORG = "/orgs/";
-var API_EVENTS = "/events";
-
-var defaultUsers = [{
-  username: "paradite",
-  email:"zhuliangg11@gmail.com"
-}, 
-{
-  username: "digawp",
-  email:"digawp@gmail.com"
-}, 
-{
-  username: "mikelimantara",
-  email:"mike.bdg@gmail.com"
-}, 
-{
-  username: "whattokingu",
-  email:"zhengweihan.91@gmail.com"
-}, 
-{
-  username: "YijinL",
-  email:"leowyijin@gmail.com"
-}];
-
-var defaultOrgs = ["nus-fboa2016-si"];
+"use strict";
 
 var parseDate = d3.time.format("%Y-%m-%dT%H:%M:%SZ").parse,
   formatDate = d3.time.format("%d %b %H:%M:%S"),
   formatDateForQuery = d3.time.format("%Y-%m-%dT%H:%M:%SZ"),
   formatTime = d3.time.format("%H:%M:%S");
+
+var defaultUsers = [{
+  username: "paradite",
+  email: "zhuliangg11@gmail.com"
+}, {
+  username: "digawp",
+  email: "digawp@gmail.com"
+}, {
+  username: "mikelimantara",
+  email: "mike.bdg@gmail.com"
+}, {
+  username: "whattokingu",
+  email: "zhengweihan.91@gmail.com"
+}, {
+  username: "YijinL",
+  email: "leowyijin@gmail.com"
+}];
+
+var defaultOrgs = ["nus-fboa2016-si"];
 
 var margin = {
   top: 100,
@@ -38,7 +30,6 @@ var margin = {
   bottom: 50,
   left: 200
 };
-
 
 var rowHeight = 60;
 
@@ -74,6 +65,7 @@ function updateAxis() {
 }
 
 function handleNewCommits(user, commits) {
+  ui.hideSpinner();
   updateAxis();
   myChart.displayCommits(user, commits);
 }
@@ -144,13 +136,15 @@ if (!Array.prototype.includes) {
       k = n;
     } else {
       k = len + n;
-      if (k < 0) {k = 0;}
+      if (k < 0) {
+        k = 0;
+      }
     }
     var currentElement;
     while (k < len) {
       currentElement = O[k];
       if (searchElement === currentElement ||
-         (searchElement !== searchElement && currentElement !== currentElement)) { // NaN !== NaN
+        (searchElement !== searchElement && currentElement !== currentElement)) { // NaN !== NaN
         return true;
       }
       k++;

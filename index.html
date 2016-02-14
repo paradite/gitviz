@@ -1,17 +1,28 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>CS3281 Visualization</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
+  <title>CS3281 Visualization</title>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" type="text/css" href="css/spinner/spinner.css">
 </head>
+
 <body>
-<div class="title">
-	Please wait, GitHub API requests may take up to 2 seconds...
-</div>
+  <!-- Spinner -->
+  <div id="spinner" class="overlay">
+    <div class="overlay-center">
+      <div class="spinner-loader">
+      </div>
+      <br>
+      <a class="loading-text">Loading...</a>
+    </div>
+  </div>
 </body>
+
 </html>
 <script type="text/javascript" src="bower_components/d3/d3.min.js"></script>
 <script type="text/javascript" src="bower_components/d3-tip/index.js"></script>
 <script type="text/javascript" src="js/data.js"></script>
 <script type="text/javascript" src="js/chart.js"></script>
+<script type="text/javascript" src="js/ui.js"></script>
 <script type="text/javascript" src="js/viz.js"></script>
