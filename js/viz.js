@@ -27,16 +27,16 @@ var defaultOrgs = ["nus-fboa2016-si"];
 var margin = {
   top: 100,
   right: 200,
-  bottom: 50,
+  bottom: 100,
   left: 200
 };
 
-var rowHeight = 60;
+var rowHeight = 40;
 
 var currentRowNum = 0;
 
 var width = window.innerWidth - margin.left - margin.right,
-  height = window.innerHeight * 0.9 - margin.top - margin.bottom,
+  height = window.innerHeight - margin.top - margin.bottom,
   barHeight = 30;
 
 height = rowHeight * defaultUsers.length;
@@ -53,15 +53,7 @@ function filterPushEvents(event) {
 
 function updateAxis() {
   myChart.setScaleDomain(data.getDomain(dateAccessor));
-
-  var xAxis = d3.svg.axis()
-    .scale(myChart.getScale())
-    .orient("bottom")
-    .ticks(6)
-    .tickFormat(d3.time.format('%d %b'))
-    .tickSize(1);
-
-  myChart.updateAxisElment(xAxis);
+  myChart.updateAxisElment();
 }
 
 function handleNewCommits(user, commits) {

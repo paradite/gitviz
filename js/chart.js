@@ -9,6 +9,7 @@ function chart(width, height, margin) {
   var _chartElement = null;
   var _svgWrapper = null;
   var _xAxisElement = null;
+  var _brushAxisElement = null;
 
   var COMMIT_STYLE = {
     fill: "white",
@@ -18,6 +19,7 @@ function chart(width, height, margin) {
   }
 
   var _xScale = d3.time.scale().range([5, width - 5]);
+  var _brushxScale = d3.time.scale().range([5, width - 5]);
 
   var module = {};
 
@@ -25,6 +27,43 @@ function chart(width, height, margin) {
   module.width = width;
   module.height = height;
 
+  var brushHeight = 30;
+  var brushMargin = 30;
+
+  var brush = d3.svg.brush();
+  var gBrush;
+
+  function brushed() {
+    if (!d3.event.sourceEvent) return; // only transition after input
+    var extent0 = brush.extent();
+
+    // if empty when rounded, use floor & ceil instead
+    // if (extent1[0] >= extent1[1]) {
+    //   extent1[0] = d3.time.day.floor(extent0[0]);
+    //   extent1[1] = d3.time.day.ceil(extent0[1]);
+    // }
+
+    // d3.select(this).transition()
+    //   .call(brush.extent(extent0))
+    //   .call(brush.event);
+
+    // Update scale
+    _xScale.domain(brush.empty() ? _brushxScale.domain() : brush.extent());
+    reScaleData();
+  }
+
+  function reScaleData() {
+    module.updateAxisElment();
+    reScaleCommits();
+  }
+
+  function reScaleCommits() {
+    _chartElement
+      .selectAll("circle.commit")
+      .attr("cx", function(d) {
+        return _xScale(dateAccessor(d));
+      });
+  }
 
   function applyStyle(style, tip) {
     this.attr("r", style.r)
@@ -45,27 +84,38 @@ function chart(width, height, margin) {
 
 
   module.init = function() {
-    var svgWrapper = d3.select("body")
+    _svgWrapper = d3.select("body")
       .append("svg")
       .attr("id", "viz")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom);
 
-    var container = svgWrapper.append("g")
+    gBrush = _svgWrapper.append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+      .attr("class", "brush");
+
+    _brushAxisElement = _svgWrapper.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(" + margin.left + "," + (margin.top + brushHeight) + ")");
+
+    var container = _svgWrapper.append("g")
+      .attr("transform", "translate(" + margin.left + "," + (margin.top + brushHeight + brushMargin) + ")")
       .style("pointer-events", "all");
 
-    container.append("rect")
+    container.append("clipPath")
+      .attr("id", "myClip")
+      .append("rect")
       .attr("width", width)
       .attr("height", height)
       .attr("fill", "#FFFFFF");
 
-    var chartElement = container.append("g")
+    _chartElement = container.append("g")
       .attr("width", width)
       .attr("height", height)
+      .attr("clip-path", "url(#myClip)")
       .classed("chart", true);
 
-    var xAxisElement = container.append("g")
+    _xAxisElement = container.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")");
 
@@ -75,10 +125,6 @@ function chart(width, height, margin) {
     //     .attr("y", 35)
     //     .style("text-anchor", "end")
     //     .text("time");
-
-    _svgWrapper = svgWrapper;
-    _chartElement = chartElement;
-    _xAxisElement = xAxisElement;
   }
 
   module.displayCommits = function(user, data) {
@@ -107,8 +153,11 @@ function chart(width, height, margin) {
   }
 
   module.initRow = function(user, rowNum) {
+    var FIRST_ROW_MARGIN = 10;
+
     var row = _chartElement.append("g")
-      .attr("transform", "translate(0," + (rowNum) * rowHeight + ")")
+      .attr("transform", "translate(0," + ((rowNum) * rowHeight + FIRST_ROW_MARGIN) + ")")
+      .attr("width", width)
       .classed(user.username, true);
 
     row.append("line")
@@ -125,12 +174,42 @@ function chart(width, height, margin) {
       .style("dominant-baseline", "text-before-edge");
   }
 
-  module.updateAxisElment = function(axis) {
-    _xAxisElement.call(axis);
+  module.updateAxisElment = function() {
+
+    var xAxis = d3.svg.axis()
+      .scale(_xScale)
+      .orient("bottom")
+      .ticks(4)
+      .tickFormat(d3.time.format('%d %b %I%p'))
+      .tickSize(5);
+
+    var brushxAxis = d3.svg.axis()
+      .scale(_brushxScale)
+      .orient("bottom")
+      .ticks(5)
+      .tickFormat(d3.time.format('%d %b'))
+      .tickSize(5);
+
+    _xAxisElement.call(xAxis);
+    _brushAxisElement.call(brushxAxis);
   }
 
   module.setScaleDomain = function(domain) {
+    var midpoint = new Date((domain[0].getTime() + domain[1].getTime()) / 2);
+
     _xScale.domain(domain);
+    _brushxScale.domain(domain);
+
+    brush.x(_brushxScale)
+      .extent([midpoint, domain[1]])
+      .on("brush", brushed);
+
+    gBrush
+      .call(brush)
+      .call(brush.event);
+
+    gBrush.selectAll("rect")
+      .attr("height", brushHeight);
   }
 
   module.getScale = function() {
