@@ -13,6 +13,11 @@ var data = (function() {
 
   var module = {};
 
+
+  var _filterPushEvents = function(event) {
+    return event.type === "PushEvent";
+  }
+
   module.getOrgEvent = function(org, cb) {
     var url = API_BASE_URL + API_ORG + org + API_EVENTS;
     d3.json(url)
@@ -21,15 +26,15 @@ var data = (function() {
         if (err) {
           console.log(err);
         } else {
-          console.log(data.filter(filterPushEvents));
-          // _updateCommitsFromPushes(user, data.filter(filterPushEvents));
+          console.log(data.filter(_filterPushEvents));
+          // _updateCommitsFromPushes(user, data.filter(_filterPushEvents));
           // _fetchCommitDetails(user, cb);
         }
       });
   };
 
   module.getPubEvent = function(user, cb) {
-    console.log(user);
+    // console.log(user);
     var url = API_BASE_URL + API_USER + user.username + API_PUBLIC_EVENTS;
     d3.json(url)
       .header("Authorization", "Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==")
@@ -37,7 +42,7 @@ var data = (function() {
         if (err) {
           console.log(err);
         } else {
-          _updateCommitsFromPushes(user, data.filter(filterPushEvents));
+          _updateCommitsFromPushes(user, data.filter(_filterPushEvents));
           _fetchCommitDetails(user, cb);
         }
       });
@@ -87,14 +92,16 @@ var data = (function() {
           } else {
             //console.log(res);
             commitsRemaining--;
+            console.log(res["commit"]["author"]["date"]);
             var commitDate = parseDate(res["commit"]["author"]["date"]);
+            console.log(commitDate);
             if (isCommitTooEarly(commitDate)) {
               console.log("too ealry");
               return;
             }
             d.date = commitDate;
             // if (commitsRemaining === 0) {
-            // _commits[user].sort(sortTime);
+            // _commits[user].sort(_sortTime);
             cb(user, _commits[user.username]);
             // }
           }
@@ -103,7 +110,15 @@ var data = (function() {
     });
   }
 
-
+  var _sortTime = function(d1, d2) {
+    if (d1.date < d2.date) {
+      return -1;
+    } else if (d1.date == d2.date) {
+      return 0;
+    } else {
+      return 1;
+    }
+  }
 
   var _ValidDateEarliest = new Date(2016, 0, 11); // Semester start at Jan 11
 

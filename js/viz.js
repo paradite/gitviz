@@ -1,9 +1,15 @@
 "use strict";
 
-var parseDate = d3.time.format("%Y-%m-%dT%H:%M:%SZ").parse,
+var parseDate = d3.time.format.utc("%Y-%m-%dT%H:%M:%SZ").parse,
   formatDate = d3.time.format("%d %b %H:%M:%S"),
   formatDateForQuery = d3.time.format("%Y-%m-%dT%H:%M:%SZ"),
   formatTime = d3.time.format("%H:%M:%S");
+
+// function formatDate(d) {
+//   console.log(d);
+//   console.log(d.toLocaleTimeString());
+//   return d.toLocaleTimeString() + " " + d.toLocaleDateString();
+// }
 
 var defaultUsers = [{
   username: "paradite",
@@ -47,10 +53,6 @@ var myChart = new chart(width, height, margin);
 
 myChart.init();
 
-function filterPushEvents(event) {
-  return event.type === "PushEvent";
-}
-
 function updateAxis() {
   myChart.setScaleDomain(data.getDomain(dateAccessor));
   myChart.updateAxisElment();
@@ -74,16 +76,6 @@ function dateAccessor(d) {
 function timeLabelFormat(d) {
   console.log(d);
   return formatDate(d);
-}
-
-function sortTime(d1, d2) {
-  if (d1.date < d2.date) {
-    return -1;
-  } else if (d1.date == d2.date) {
-    return 0;
-  } else {
-    return 1;
-  }
 }
 
 function addNewOrg(org) {
