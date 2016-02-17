@@ -75,9 +75,9 @@ function chart(width, height, margin) {
   }
 
   function getTextForDisplay(d) {
-    var text = d.username + "(" + d.name + ")" + "<br>";
+    var text = d.username + "(" + d.name + ")" + formatDateOnly(d.date).replace("-", " ") + "<br>";
     for (var i = 0; i < d.commits.length; i++) {
-      text += "<span class=\"secondary\">" + formatDate(d.commits[i].date) + " " + d.commits[i]["commit"]["message"] + "</span><br>";
+      text += "<span class=\"secondary\">" + getTime(d.commits[i]) + " " + getStats(d.commits[i]) + " " + getCommitMessage(d.commits[i]) + "</span><br>";
     }
     // if (d.date) {
     //   return "<span class=\"secondary\">" + formatDate(d.date) + " " + d["author"]["name"] + "</span> " + d["message"];
@@ -85,6 +85,18 @@ function chart(width, height, margin) {
     //   return d["author"]["name"] + " " + d["message"];
     // }
     return text;
+  }
+
+  function getTime(commit) {
+    return formatTime(commit.date);
+  }
+
+  function getCommitMessage(commit) {
+    return commit["commit"]["message"];
+  }
+
+  function getStats(commit) {
+    return "<span class=\"addition\">+" + commit.stats.additions + "</span> <span class=\"deletion\">-" + commit.stats.deletions + "</span>";
   }
 
 
@@ -158,7 +170,7 @@ function chart(width, height, margin) {
   }
 
   module.initRow = function(user, rowNum) {
-    var FIRST_ROW_MARGIN = 10;
+    var FIRST_ROW_MARGIN = 15;
 
     var row = _chartElement.append("g")
       .attr("transform", "translate(0," + ((rowNum) * rowHeight + FIRST_ROW_MARGIN) + ")")
