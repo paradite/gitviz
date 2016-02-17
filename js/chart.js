@@ -208,8 +208,7 @@ function chart(width, height, margin) {
     var xAxis = d3.svg.axis()
       .scale(_xScale)
       .orient("bottom")
-      .ticks(4)
-      .tickFormat(d3.time.format('%d %b %I%p'))
+      .tickFormat(d3.time.format('%d %b'))
       .tickSize(5);
 
     var brushxAxis = d3.svg.axis()
@@ -224,7 +223,6 @@ function chart(width, height, margin) {
   }
 
   module.setScaleDomain = function(domain) {
-    console.log(domain);
     var midpoint = new Date((domain[0].getTime() + domain[1].getTime()) / 2);
 
     _xScale.domain(domain);
@@ -240,6 +238,8 @@ function chart(width, height, margin) {
 
     gBrush.selectAll("rect")
       .attr("height", brushHeight);
+
+    _xScale.domain(brush.empty() ? _brushxScale.domain() : brush.extent());
   }
 
   module.getScale = function() {

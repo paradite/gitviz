@@ -106,7 +106,6 @@ var data = (function() {
       //console.log(res);
       // console.log(res["commit"]["author"]["date"]);
       var commitDate = parseDate(res["commit"]["author"]["date"]);
-      console.log(commitDate);
       // Expose date at outer level
       res["date"] = commitDate;
 
