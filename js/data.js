@@ -11,6 +11,8 @@ var data = (function() {
 
   var _commits = {};
 
+  var _commitsByDate = {};
+
   var module = {};
 
 
@@ -81,33 +83,65 @@ var data = (function() {
       console.log("user does not exist");
       return;
     }
-    var commitsRemaining = 0;
+
+    _commitsByDate[user.username] = [];
+
     _commits[user.username].forEach(function(d) {
-      commitsRemaining++;
-      d3.json(d.url)
-        .header("Authorization", "Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==")
-        .get(function(err, res) {
-          if (err) {
-            console.log(err);
-          } else {
-            //console.log(res);
-            commitsRemaining--;
-            console.log(res["commit"]["author"]["date"]);
-            var commitDate = parseDate(res["commit"]["author"]["date"]);
-            console.log(commitDate);
-            if (isCommitTooEarly(commitDate)) {
-              console.log("too ealry");
-              return;
-            }
-            d.date = commitDate;
-            // if (commitsRemaining === 0) {
-            // _commits[user].sort(_sortTime);
-            cb(user, _commits[user.username]);
-            // }
-          }
-        });
-      //console.log(d);
+      _fetchCommitDetail(user, cb, d);
     });
+  }
+
+  var _fetchCommitDetail = function(user, cb, d) {
+    d3.json(d.url)
+      .header("Authorization", "Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==")
+      .get(function(err, res) {
+        _handleCommitDetail(user, cb, err, res);
+      });
+  }
+
+  var _handleCommitDetail = function(user, cb, err, res) {
+    if (err) {
+      console.log(err);
+    } else {
+      //console.log(res);
+      // console.log(res["commit"]["author"]["date"]);
+      var commitDate = parseDate(res["commit"]["author"]["date"]);
+      console.log(commitDate);
+      // Expose date at outer level
+      res["date"] = commitDate;
+
+      if (isCommitTooEarly(commitDate)) {
+        // console.log("too ealry");
+        return;
+      }
+      // d.date = commitDate;
+      // console.log(formatDateOnly(commitDate));
+      var dateOnly = formatDateOnly(commitDate);
+      addCommitByDate(user, dateOnly, res);
+      cb(user, getCommitByDate(user));
+    }
+  }
+
+  var addCommitByDate = function(user, date, commit) {
+    for (var i = 0; i < _commitsByDate[user.username].length; i++) {
+      if(_commitsByDate[user.username][i]["dateStr"] === date){
+        _commitsByDate[user.username][i]["commits"].push(commit);
+        return;
+      }
+    }
+
+    // Date not added yet
+    _commitsByDate[user.username].push({
+      dateStr: date,
+      date: formatDateOnly.parse(date),
+      commits: [commit],
+      name: commit["commit"]["author"]["name"],
+      username: commit["author"]["login"]
+    });
+  }
+
+  var getCommitByDate = function(user) {
+    return _commitsByDate[user.username];
   }
 
   var _sortTime = function(d1, d2) {
@@ -128,13 +162,15 @@ var data = (function() {
 
   module.getDomain = function(accessor) {
     var domains = [];
-    for (var userkey in _commits) {
-      if (_commits.hasOwnProperty(userkey)) {
-        var userCommits = _commits[userkey];
+    for (var userkey in _commitsByDate) {
+      if (_commitsByDate.hasOwnProperty(userkey)) {
+        var userCommits = _commitsByDate[userkey];
         domains = domains.concat(d3.extent(userCommits, accessor));
       }
     }
-    return d3.extent(domains);
+    var dates = d3.extent(domains);
+    // Round to next day for last date
+    return [dates[0], d3.time.day.offset(dates[1], 1)];
   }
 
   return module;

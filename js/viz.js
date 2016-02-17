@@ -3,13 +3,8 @@
 var parseDate = d3.time.format.utc("%Y-%m-%dT%H:%M:%SZ").parse,
   formatDate = d3.time.format("%d %b %H:%M:%S"),
   formatDateForQuery = d3.time.format("%Y-%m-%dT%H:%M:%SZ"),
+  formatDateOnly = d3.time.format("%Y-%m-%d"),
   formatTime = d3.time.format("%H:%M:%S");
-
-// function formatDate(d) {
-//   console.log(d);
-//   console.log(d.toLocaleTimeString());
-//   return d.toLocaleTimeString() + " " + d.toLocaleDateString();
-// }
 
 var defaultUsers = [{
   username: "paradite",
@@ -54,7 +49,7 @@ var myChart = new chart(width, height, margin);
 myChart.init();
 
 function updateAxis() {
-  myChart.setScaleDomain(data.getDomain(dateAccessor));
+  myChart.setScaleDomain(data.getDomain(dateOnlyAccessor));
   myChart.updateAxisElment();
 }
 
@@ -69,6 +64,24 @@ function dateAccessor(d) {
     return d.date;
   } else {
     return null;
+  }
+  //console.log(d.date);
+}
+
+function dateOnlyAccessor(d) {
+  if (d.date) {
+    return d.date;
+  } else {
+    return null;
+  }
+  //console.log(d.date);
+}
+
+function amountAccessor(d) {
+  if (d.commits && Array.isArray(d.commits)) {
+    return d.commits.length;
+  } else {
+    return 0;
   }
   //console.log(d.date);
 }

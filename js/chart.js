@@ -66,7 +66,7 @@ function chart(width, height, margin) {
   }
 
   function applyStyle(style, tip) {
-    this.attr("r", style.r)
+    this.attr("r", function(d){return style.r * Math.sqrt(amountAccessor(d));})
       .attr("fill", style.fill)
       .attr("stroke", style.color)
       .attr("stroke-width", style["stroke-width"])
@@ -75,11 +75,16 @@ function chart(width, height, margin) {
   }
 
   function getTextForDisplay(d) {
-    if (d.date) {
-      return "<span class=\"secondary\">" + formatDate(d.date) + " " + d["author"]["name"] + "</span> " + d["message"];
-    } else {
-      return d["author"]["name"] + " " + d["message"];
+    var text = d.username + "(" + d.name + ")" + "<br>";
+    for (var i = 0; i < d.commits.length; i++) {
+      text += "<span class=\"secondary\">" + formatDate(d.commits[i].date) + " " + d.commits[i]["commit"]["message"] + "</span><br>";
     }
+    // if (d.date) {
+    //   return "<span class=\"secondary\">" + formatDate(d.date) + " " + d["author"]["name"] + "</span> " + d["message"];
+    // } else {
+    //   return d["author"]["name"] + " " + d["message"];
+    // }
+    return text;
   }
 
 
@@ -148,7 +153,7 @@ function chart(width, height, margin) {
 
     // update position
     row.attr("cx", function(d) {
-      return _xScale(dateAccessor(d));
+      return _xScale(dateOnlyAccessor(d));
     });
   }
 
@@ -195,6 +200,7 @@ function chart(width, height, margin) {
   }
 
   module.setScaleDomain = function(domain) {
+    console.log(domain);
     var midpoint = new Date((domain[0].getTime() + domain[1].getTime()) / 2);
 
     _xScale.domain(domain);
