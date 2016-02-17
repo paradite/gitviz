@@ -4,7 +4,8 @@ var parseDate = d3.time.format.utc("%Y-%m-%dT%H:%M:%SZ").parse,
   formatDate = d3.time.format("%d %b %H:%M:%S"),
   formatDateForQuery = d3.time.format("%Y-%m-%dT%H:%M:%SZ"),
   formatDateOnly = d3.time.format("%Y-%m-%d"),
-  formatTime = d3.time.format("%H:%M:%S");
+  formatTime = d3.time.format("%H:%M:%S"),
+  formatDateNice = d3.time.format("%d %b");
 
 var defaultUsers = [{
   username: "paradite",
@@ -21,6 +22,9 @@ var defaultUsers = [{
 }, {
   username: "YijinL",
   email: "leowyijin@gmail.com"
+}, {
+  username: "jinified",
+  email: "jinified@gmail.com"
 }];
 
 var defaultOrgs = ["nus-fboa2016-si"];

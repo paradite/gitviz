@@ -66,7 +66,9 @@ function chart(width, height, margin) {
   }
 
   function applyStyle(style, tip) {
-    this.attr("r", function(d){return style.r * Math.sqrt(amountAccessor(d));})
+    this.attr("r", function(d) {
+        return style.r * Math.sqrt(amountAccessor(d));
+      })
       .attr("fill", style.fill)
       .attr("stroke", style.color)
       .attr("stroke-width", style["stroke-width"])
@@ -75,10 +77,20 @@ function chart(width, height, margin) {
   }
 
   function getTextForDisplay(d) {
-    var text = d.username + "(" + d.name + ")" + formatDateOnly(d.date).replace("-", " ") + "<br>";
-    for (var i = 0; i < d.commits.length; i++) {
-      text += "<span class=\"secondary\">" + getTime(d.commits[i]) + " " + getStats(d.commits[i]) + " " + getCommitMessage(d.commits[i]) + "</span><br>";
+    var MAX_COMMITS = 5;
+    var text = d.username + "(" + d.name + ") " + formatDateNice(d.date) + "<br>";
+
+    if (d.commits.length <= MAX_COMMITS) {
+      for (var i = 0; i < d.commits.length; i++) {
+        text += "<span class=\"secondary\">" + getTime(d.commits[i]) + " " + getStats(d.commits[i]) + " " + getCommitMessage(d.commits[i]) + "</span><br>";
+      }
+    } else {
+      for (var i = 0; i < MAX_COMMITS; i++) {
+        text += "<span class=\"secondary\">" + getTime(d.commits[i]) + " " + getStats(d.commits[i]) + " " + getCommitMessage(d.commits[i]) + "</span><br>";
+      }
+      text += "<span class=\"secondary\">... and " + (d.commits.length - MAX_COMMITS) + " more commits</span>";
     }
+
     // if (d.date) {
     //   return "<span class=\"secondary\">" + formatDate(d.date) + " " + d["author"]["name"] + "</span> " + d["message"];
     // } else {
