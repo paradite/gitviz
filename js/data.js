@@ -172,6 +172,33 @@ var data = (function() {
     return [dates[0], d3.time.day.offset(dates[1], 1)];
   }
 
+
+  module.MAX_COMMITS = 5;
+
+  module.getPrimaryTooltipData = function(d) {
+    return d.username + "(" + d.name + ") " + formatDateNice(d.date);
+  }
+
+  module.getAdditionalTooltipData = function(d) {
+    return "... and " + (d.commits.length - module.MAX_COMMITS) + " more commits";
+  }
+
+  module.getSecondaryTooltipDataByIndex = function(d, i) {
+    return _getCommitTime(d.commits[i]) + " " + _getStatsContent(d.commits[i]) + " " + _getCommitMessage(d.commits[i]);
+  }
+
+  function _getCommitTime(commit) {
+    return formatTime(commit.date);
+  }
+
+  function _getCommitMessage(commit) {
+    return commit["commit"]["message"];
+  }
+
+  function _getStatsContent(commit) {
+    return "<span class=\"addition\">+" + commit.stats.additions + "</span> <span class=\"deletion\">-" + commit.stats.deletions + "</span>";
+  }
+
   return module;
 
 })();

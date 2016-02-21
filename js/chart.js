@@ -76,41 +76,27 @@ function chart(width, height, margin) {
       .on('mouseout', tip.hide);
   }
 
-  function getTextForDisplay(d) {
-    var MAX_COMMITS = 5;
-    var text = d.username + "(" + d.name + ") " + formatDateNice(d.date) + "<br>";
+  function getTooltipContent(d) {
+    var text = data.getPrimaryTooltipData(d);
 
-    if (d.commits.length <= MAX_COMMITS) {
+    if (d.commits.length <= data.MAX_COMMITS) {
       for (var i = 0; i < d.commits.length; i++) {
-        text += "<span class=\"secondary\">" + getTime(d.commits[i]) + " " + getStats(d.commits[i]) + " " + getCommitMessage(d.commits[i]) + "</span><br>";
+        text += formatSecondaryData(data.getSecondaryTooltipDataByIndex(d, i));
       }
     } else {
-      for (var i = 0; i < MAX_COMMITS; i++) {
-        text += "<span class=\"secondary\">" + getTime(d.commits[i]) + " " + getStats(d.commits[i]) + " " + getCommitMessage(d.commits[i]) + "</span><br>";
+      for (var i = 0; i < data.MAX_COMMITS; i++) {
+        text += formatSecondaryData(data.getSecondaryTooltipDataByIndex(d, i));
       }
-      text += "<span class=\"secondary\">... and " + (d.commits.length - MAX_COMMITS) + " more commits</span>";
+      text += formatAdditionalData(data.getAdditionalTooltipData(d));
     }
-
-    // if (d.date) {
-    //   return "<span class=\"secondary\">" + formatDate(d.date) + " " + d["author"]["name"] + "</span> " + d["message"];
-    // } else {
-    //   return d["author"]["name"] + " " + d["message"];
-    // }
     return text;
   }
 
-  function getTime(commit) {
-    return formatTime(commit.date);
+  function formatSecondaryData(data) {
+    return "<br><span class=\"secondary\">" + data + "</span>";
   }
 
-  function getCommitMessage(commit) {
-    return commit["commit"]["message"];
-  }
-
-  function getStats(commit) {
-    return "<span class=\"addition\">+" + commit.stats.additions + "</span> <span class=\"deletion\">-" + commit.stats.deletions + "</span>";
-  }
-
+  var formatAdditionalData = formatSecondaryData;
 
   module.init = function() {
     _svgWrapper = d3.select("body")
@@ -165,7 +151,7 @@ function chart(width, height, margin) {
       .attr('class', 'd3-tip')
       .offset([-5, 0])
       .html(function(d) {
-        return getTextForDisplay(d);
+        return getTooltipContent(d);
       });
     _svgWrapper.call(tip);
 
