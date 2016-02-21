@@ -81,15 +81,6 @@ function dateOnlyAccessor(d) {
   //console.log(d.date);
 }
 
-function amountAccessor(d) {
-  if (d.commits && Array.isArray(d.commits)) {
-    return d.commits.length;
-  } else {
-    return 0;
-  }
-  //console.log(d.date);
-}
-
 function timeLabelFormat(d) {
   console.log(d);
   return formatDate(d);

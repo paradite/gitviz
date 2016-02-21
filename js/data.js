@@ -199,6 +199,14 @@ var data = (function() {
     return "<span class=\"addition\">+" + commit.stats.additions + "</span> <span class=\"deletion\">-" + commit.stats.deletions + "</span>";
   }
 
+  module.sizeAccessor = function(d) {
+  if (d.commits && Array.isArray(d.commits)) {
+    return d.commits.length;
+  } else {
+    return 0;
+  }
+}
+
   return module;
 
 })();

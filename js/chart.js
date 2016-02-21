@@ -67,7 +67,7 @@ function chart(width, height, margin) {
 
   function applyStyle(style, tip) {
     this.attr("r", function(d) {
-        return style.r * Math.sqrt(amountAccessor(d));
+        return style.r * Math.sqrt(data.sizeAccessor(d));
       })
       .attr("fill", style.fill)
       .attr("stroke", style.color)
