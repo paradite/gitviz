@@ -174,6 +174,8 @@ viz.chart = (function() {
       row.select('.info')
         .text('@' + user.username);
     }
+
+    reScaleData();
   };
 
   module.initRow = function(user, rowNum) {
