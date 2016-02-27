@@ -1,5 +1,5 @@
 # gitviz
-gitviz allows you to visualize GitHub users' contributions.
+gitviz allows you to visually compare GitHub users' contributions.
 
 ## Why use gitviz
 * Track your teammates' contributions for the project, and find out the SLACKER
@@ -7,7 +7,7 @@ gitviz allows you to visualize GitHub users' contributions.
 * Play with it for fun
 
 ## How to use gitviz
-* Enter GitHub username and email
+* Enter GitHub username and email (optional)
 * Magic
 
 ## Todo:
