@@ -128,24 +128,15 @@ viz.data = (function() {
     if (err) {
       console.log(err);
     } else {
-      // console.log(res);
-      // console.log(res["commit"]["author"]["date"]);
       var commitDate = viz.util.parseDate(res['commit']['author']['date']);
       // Expose date at outer level
       res['date'] = commitDate;
-
-      if (isCommitTooEarly(commitDate)) {
-        // console.log("too ealry");
-        return;
-      }
-      // d.date = commitDate;
-      // console.log(formatDateOnly(commitDate));
       var dateOnly = viz.util.formatDateOnly(commitDate);
       addCommitByDate(user, dateOnly, res);
-      _outStandingFeteches[user.username]--;
-      if (_outStandingFeteches[user.username] === 0) {
-        cb(null, user, getCommitByDate(user));
-      }
+    }
+    _outStandingFeteches[user.username]--;
+    if (_outStandingFeteches[user.username] === 0) {
+      cb(null, user, getCommitByDate(user));
     }
   };
 
