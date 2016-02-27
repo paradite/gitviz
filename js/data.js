@@ -14,6 +14,8 @@ viz.data = (function() {
 
   var module = {};
 
+  var _outStandingFeteches = 0;
+
   var _filterPushEvents = function(event) {
     return event.type === 'PushEvent';
   };
@@ -58,7 +60,7 @@ viz.data = (function() {
               user.email = userdata.email;
             }
             if (userdata.email === null && user.email === null) {
-              cb('No GitHub public email for ' + user.username + ', please enter mannually', null, null);
+              cb('There is no GitHub public email for ' + user.username + ', please enter mannually', null, null);
               return;
             }
             user.name = userdata.name;
@@ -108,6 +110,7 @@ viz.data = (function() {
   };
 
   var _fetchCommitDetail = function(user, cb, d) {
+    _outStandingFeteches++;
     d3.json(d.url)
       .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
       .get(function(err, res) {
@@ -133,7 +136,10 @@ viz.data = (function() {
       // console.log(formatDateOnly(commitDate));
       var dateOnly = viz.util.formatDateOnly(commitDate);
       addCommitByDate(user, dateOnly, res);
-      cb(null, user, getCommitByDate(user));
+      _outStandingFeteches--;
+      if (_outStandingFeteches === 0) {
+        cb(null, user, getCommitByDate(user));
+      }
     }
   };
 
