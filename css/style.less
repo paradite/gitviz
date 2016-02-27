@@ -1,28 +1,46 @@
-// Chart
-.axis path,
-.axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-}
+@dark-blue: #2D3142;
+@light-blue: #B0D7FF;
+@light-grey: #D8D5DB;
+@dark-grey: #D8D5DB;
+@lighter-blue: #EAE8FF;
 
-.axis {
-    font: 12px sans-serif;
-}
+@white: #FFFFFF;
 
-.brush .extent {
-    stroke: #000;
-    fill-opacity: .125;
-    shape-rendering: crispEdges;
-}
-
+// UI
 body {
     margin: 0px;
 }
 
+input, button {
+    height: 20px;
+}
+
+button {
+    border: none;
+}
+
 .title {
+    margin: 0px;
+    padding: 10px 0px;
+    background-color: @dark-blue;
+    color: @white;
     width: 100%;
     text-align: center;
+}
+
+.description {
+    font-family: sans-serif;
+    text-align: center;
+    width: 49%;
+    display: inline-block;
+    color: @dark-blue;
+    margin: 20px 0px;
+}
+
+.form {
+    width: 100%;
+    text-align: center;
+    margin: 5px;
 }
 
 .gone {
@@ -42,7 +60,7 @@ body {
 
 .overlay {
     display: table;
-    background-color: #6475de;
+    background-color: @dark-blue;
     text-align: center;
     vertical-align: middle;
     z-index: 100;
@@ -58,6 +76,35 @@ body {
     vertical-align: middle;
     height: 400px;
     margin: 0 auto;
+}
+
+// Chart
+
+circle.commit {
+    stroke: @dark-blue;
+    stroke-width: 2px;
+}
+
+#viz {
+    background-color: @lighter-blue;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.axis {
+    font: 12px sans-serif;
+}
+
+.brush .extent {
+    stroke: @dark-blue;
+    fill: @dark-grey;
+    // fill-opacity: .125;
+    shape-rendering: crispEdges;
 }
 
 // Text

@@ -2,21 +2,36 @@
 <html>
 
 <head>
-  <title>Gitviz - GitHub contributions visualized</title>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-  <link rel="stylesheet" type="text/css" href="css/spinner/spinner.css">
+    <title>Gitviz - GitHub contributions visualized</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/spinner/spinner.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 </head>
 
 <body>
-  <!-- Spinner -->
-  <div id="spinner" class="overlay">
-    <div class="overlay-center">
-      <div class="spinner-loader">
-      </div>
-      <br>
-      <a class="loading-text">Loading...</a>
+    <!-- Spinner -->
+    <div id="spinner" class="overlay">
+        <div class="overlay-center">
+            <div class="spinner-loader">
+            </div>
+            <br>
+            <a class="loading-text">Loading...</a>
+        </div>
     </div>
-  </div>
+    <h1 class="title">Gitviz</h1>
+    <div class="description">
+        <i class="fa fa-tasks fa-3x"></i>
+        <p> Track your teammates' contributions for school projects</p>
+    </div>
+    <div class="description">
+        <i class="fa fa-users fa-3x"></i>
+        <p> Compare coding activities with your friends</p>
+    </div>
+    <div class="form">
+        <input id="githubID-input" placeholder="GitHub username" type="username" name="username" autocomplete="on"></input>
+        <input id="email-input" placeholder="email" type="email" name="email" autocomplete="on"></input>
+        <button id="add-btn">Add</button>
+    </div>
 </body>
 
 </html>
@@ -25,4 +40,5 @@
 <script type="text/javascript" src="js/data.js"></script>
 <script type="text/javascript" src="js/chart.js"></script>
 <script type="text/javascript" src="js/ui.js"></script>
-<script type="text/javascript" src="js/viz.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/controller.js"></script>

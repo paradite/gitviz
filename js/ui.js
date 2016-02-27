@@ -1,10 +1,17 @@
-var ui = (function(){
-	var module = {};
+var viz = viz || {};
 
-	module.hideSpinner = function(){
-		d3.select("#spinner")
-			.classed("gone", true);
-	}
+viz.ui = (function() {
+  var module = {};
 
-	return module;
+  module.hideSpinner = function() {
+    d3.select('#spinner')
+      .classed('gone', true);
+  };
+
+  module.showSpinner = function() {
+    d3.select('#spinner')
+      .classed('gone', false);
+  };
+
+  return module;
 }());
