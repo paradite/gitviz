@@ -20,7 +20,7 @@
 
 var defaultUsers = [{
   username: 'paradite',
-  email: 'zhuliangg11@gmail.com'
+  email: null
 }];
 
 // var defaultOrgs = ['nus-fboa2016-si'];
@@ -46,14 +46,20 @@ function updateAxis() {
   viz.chart.updateAxisElment();
 }
 
-function handleNewCommits(user, commits) {
-  console.log("handleNewCommits");
-  console.log(user);
-  if (user === null || commits === null) {
+function handleNewCommits(err, user, commits) {
+  if (err) {
+    console.log(err);
+    d3.select('.status').text(err);
     viz.ui.hideSpinner();
     return;
   }
+  if (user === null || commits === null) {
+    viz.ui.hideSpinner();
+    d3.select('.status').text('Empty data');
+    return;
+  }
   updateAxis();
+  d3.select('.status').text('');
   viz.chart.displayCommits(user, commits);
   // brief delay before hiding spinner
   setTimeout(viz.ui.hideSpinner, 500);
@@ -76,8 +82,11 @@ function addNewUser(user) {
     return;
   }
   viz.ui.showSpinner();
-  viz.chart.initRow(user, currentRowNum);
-  currentRowNum++;
+  var row = d3.select('.' + user.username);
+  if (row.node() === null) {
+    viz.chart.initRow(user, currentRowNum);
+    currentRowNum++;
+  }
   viz.data.getPubEvent(user, handleNewCommits);
 }
 
@@ -92,7 +101,10 @@ function getUserFromInput() {
     username: d3.select('#githubID-input').node().value,
     email: d3.select('#email-input').node().value
   };
-  if (newUser.username && newUser.email) {
+  if (newUser.email === '') {
+    newUser.email = null;
+  }
+  if (newUser.username) {
     return newUser;
   } else {
     return null;

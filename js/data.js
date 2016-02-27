@@ -41,19 +41,35 @@ viz.data = (function() {
       .get(function(err, data) {
         if (err || data.length === 0) {
           console.log(err);
-          cb(null, null);
+          cb('GitHub API error', null, null);
           return;
         }
-        _updateCommitsFromPushes(user, data.filter(_filterPushEvents));
-        _fetchCommitDetails(user, cb);
+
+        // get user details
+        var userDetailUrl = API_BASE_URL + API_USER + user.username;
+        d3.json(userDetailUrl)
+          .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
+          .get(function(err, userdata) {
+            if (err || userdata.length === 0) {
+              console.log(err);
+              return;
+            }
+            if (userdata.email && user.email === null) {
+              user.email = userdata.email;
+            }
+            if (userdata.email === null && user.email === null) {
+              cb('No GitHub public email for ' + user.username + ', please enter mannually', null, null);
+              return;
+            }
+            user.name = userdata.name;
+            _updateCommitsFromPushes(user, data.filter(_filterPushEvents));
+            _fetchCommitDetails(user, cb);
+          });
       });
   };
 
   var _updateCommitsFromPushes = function(user, data) {
-    if (!_commits[user.username]) {
-      _commits[user.username] = [];
-    }
-
+    _commits[user.username] = [];
     data.forEach(function(event) {
       if (event['payload']['commits']) {
         event['payload']['commits'].forEach(function(commit) {
@@ -80,7 +96,7 @@ viz.data = (function() {
   var _fetchCommitDetails = function(user, cb) {
     if (!_commits[user.username]) {
       console.log('user does not exist or empty commits');
-      cb(null, null);
+      cb('User does not exist or have empty commits', null, null);
       return;
     }
 
@@ -117,7 +133,7 @@ viz.data = (function() {
       // console.log(formatDateOnly(commitDate));
       var dateOnly = viz.util.formatDateOnly(commitDate);
       addCommitByDate(user, dateOnly, res);
-      cb(user, getCommitByDate(user));
+      cb(null, user, getCommitByDate(user));
     }
   };
 

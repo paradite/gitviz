@@ -145,8 +145,8 @@ viz.chart = (function() {
   };
 
   module.displayCommits = function(user, data) {
-    var row = _chartElement.select('.' + user.username)
-      .selectAll('circle.commit')
+    var row = _chartElement.select('.' + user.username);
+    var circles = row.selectAll('circle.commit')
       .data(data);
 
     var tip = d3.tip()
@@ -157,16 +157,18 @@ viz.chart = (function() {
       });
     _svgWrapper.call(tip);
 
-    row.enter()
+    circles.enter()
       .append('circle')
       .classed('commit', true);
 
-    applyStyle.call(row, COMMIT_STYLE, tip);
+    applyStyle.call(circles, COMMIT_STYLE, tip);
 
     // update position
-    row.attr('cx', function(d) {
+    circles.attr('cx', function(d) {
       return _xScale(viz.data.dateAccessor(d));
     });
+    row.select('.info')
+      .text('@' + user.username + ' (' + user.name + ')');
   };
 
   module.initRow = function(user, rowNum) {
@@ -186,7 +188,8 @@ viz.chart = (function() {
       .attr('stroke', 'black');
 
     row.append('text')
-      .text(user.username + ' ' + user.email)
+      .classed('info', true)
+      .text('@' + user.username)
       .attr('y', 8)
       .style('dominant-baseline', 'text-before-edge');
 
