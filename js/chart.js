@@ -62,8 +62,8 @@ viz.chart = (function() {
 
   function applyStyle(style, tip) {
     this.attr('r', function(d) {
-      return style.r * Math.sqrt(viz.data.sizeAccessor(d));
-    })
+        return style.r * Math.sqrt(viz.data.sizeAccessor(d));
+      })
       .attr('fill', style.fill)
       .attr('stroke', style.color)
       .attr('stroke-width', style['stroke-width'])
@@ -167,8 +167,13 @@ viz.chart = (function() {
     circles.attr('cx', function(d) {
       return _xScale(viz.data.dateAccessor(d));
     });
-    row.select('.info')
-      .text('@' + user.username + ' (' + user.name + ')');
+    if (user.name) {
+      row.select('.info')
+        .text('@' + user.username + ' (' + user.name + ')');
+    } else {
+      row.select('.info')
+        .text('@' + user.username);
+    }
   };
 
   module.initRow = function(user, rowNum) {

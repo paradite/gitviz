@@ -22,8 +22,15 @@ input {
     width: 200px;
 }
 
+.demo-div {
+    p {
+        display: inline-block;
+        margin: 0px;
+    }
+    margin-top: 5px;
+}
+
 .status {
-    color: @white;
     font-size: 14px;
     font-family: sans-serif;
     padding-top: 5px;
@@ -39,6 +46,9 @@ input {
 }
 
 .description {
+    p {
+        margin: 5px;
+    }
     font-family: sans-serif;
     text-align: center;
     width: 49%;
@@ -48,6 +58,7 @@ input {
 }
 
 .form {
+    color: @white;
     background-color: @dark-blue;
     width: 100%;
     text-align: center;
@@ -121,7 +132,8 @@ circle.commit {
 }
 
 .brush .extent {
-    stroke: @dark-blue;
+    stroke: @light-blue;
+    stroke-width: 2px;
     fill: @dark-blue;
     // fill-opacity: .125;
     shape-rendering: crispEdges;

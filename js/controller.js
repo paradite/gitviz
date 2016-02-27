@@ -1,32 +1,26 @@
-// var defaultUsers = [{
-//   username: 'paradite',
-//   email: 'zhuliangg11@gmail.com'
-// }, {
-//   username: 'digawp',
-//   email: 'digawp@gmail.com'
-// }, {
-//   username: 'mikelimantara',
-//   email: 'mike.bdg@gmail.com'
-// }, {
-//   username: 'whattokingu',
-//   email: 'zhengweihan.91@gmail.com'
-// }, {
-//   username: 'YijinL',
-//   email: 'leowyijin@gmail.com'
-// }, {
-//   username: 'jinified',
-//   email: 'jinified@gmail.com'
-// }];
+var siUsers = [{
+  username: 'digawp',
+  email: 'digawp@gmail.com'
+}, {
+  username: 'mikelimantara',
+  email: 'mike.bdg@gmail.com'
+}, {
+  username: 'whattokingu',
+  email: 'zhengweihan.91@gmail.com'
+}, {
+  username: 'YijinL',
+  email: 'leowyijin@gmail.com'
+}];
 
 var defaultUsers = [{
   username: 'paradite',
-  email: null
+  email: 'zhuliangg11@gmail.com'
 }];
 
 // var defaultOrgs = ['nus-fboa2016-si'];
 
 var margin = {
-  top: 100,
+  top: 20,
   right: 200,
   bottom: 100,
   left: 200
@@ -60,9 +54,12 @@ function handleNewCommits(err, user, commits) {
   }
   updateAxis();
   d3.select('.status').text('');
+  d3.select('#githubID-input').node().value = '';
+  d3.select('#email-input').node().value = '';
   viz.chart.displayCommits(user, commits);
-  // brief delay before hiding spinner
-  setTimeout(viz.ui.hideSpinner, 500);
+  if (!viz.data.existsOutStandingFetches()) {
+    viz.ui.hideSpinner();
+  }
 }
 
 // function addNewOrg(org) {
@@ -113,10 +110,15 @@ function getUserFromInput() {
 
 addNewUsers(defaultUsers);
 
-var button = d3.select('#add-btn');
+var addButton = d3.select('#add-btn');
 // console.log(button);
-button.on('click', function() {
+addButton.on('click', function() {
   addNewUser(getUserFromInput());
+});
+
+var siButton = d3.select('#si-btn');
+siButton.on('click', function() {
+  addNewUsers(siUsers);
 });
 // addNewOrgs(defaultOrgs);
 // console.log(button);

@@ -14,7 +14,7 @@ viz.data = (function() {
 
   var module = {};
 
-  var _outStandingFeteches = 0;
+  var _outStandingFeteches = {};
 
   var _filterPushEvents = function(event) {
     return event.type === 'PushEvent';
@@ -36,7 +36,6 @@ viz.data = (function() {
   };
 
   module.getPubEvent = function(user, cb) {
-    // console.log(user);
     var url = API_BASE_URL + API_USER + user.username + API_PUBLIC_EVENTS;
     d3.json(url)
       .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
@@ -63,7 +62,11 @@ viz.data = (function() {
               cb('There is no GitHub public email for ' + user.username + ', please enter mannually', null, null);
               return;
             }
-            user.name = userdata.name;
+            if (userdata.name != null) {
+              user.name = userdata.name;
+            } else {
+              user.name = null;
+            }
             _updateCommitsFromPushes(user, data.filter(_filterPushEvents));
             _fetchCommitDetails(user, cb);
           });
@@ -96,7 +99,7 @@ viz.data = (function() {
   };
 
   var _fetchCommitDetails = function(user, cb) {
-    if (!_commits[user.username]) {
+    if (_commits[user.username].length === 0) {
       console.log('user does not exist or empty commits');
       cb('User does not exist or have empty commits', null, null);
       return;
@@ -110,7 +113,10 @@ viz.data = (function() {
   };
 
   var _fetchCommitDetail = function(user, cb, d) {
-    _outStandingFeteches++;
+    if (!_outStandingFeteches[user.username]) {
+      _outStandingFeteches[user.username] = 0;
+    }
+    _outStandingFeteches[user.username]++;
     d3.json(d.url)
       .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
       .get(function(err, res) {
@@ -136,8 +142,8 @@ viz.data = (function() {
       // console.log(formatDateOnly(commitDate));
       var dateOnly = viz.util.formatDateOnly(commitDate);
       addCommitByDate(user, dateOnly, res);
-      _outStandingFeteches--;
-      if (_outStandingFeteches === 0) {
+      _outStandingFeteches[user.username]--;
+      if (_outStandingFeteches[user.username] === 0) {
         cb(null, user, getCommitByDate(user));
       }
     }
@@ -235,6 +241,15 @@ viz.data = (function() {
       return null;
     }
     // console.log(d.date);
+  };
+
+  module.existsOutStandingFetches = function() {
+    for (var username in _outStandingFeteches) {
+      if (_outStandingFeteches.hasOwnProperty(username) && _outStandingFeteches[username] > 0) {
+        return true;
+      }
+    }
+    return false;
   };
 
   return module;
