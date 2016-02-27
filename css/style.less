@@ -3,15 +3,14 @@
 @light-grey: #D8D5DB;
 @dark-grey: #D8D5DB;
 @lighter-blue: #EAE8FF;
-
 @white: #FFFFFF;
-
 // UI
 body {
     margin: 0px;
 }
 
-input, button {
+input,
+button {
     height: 20px;
 }
 
@@ -41,6 +40,17 @@ button {
     width: 100%;
     text-align: center;
     margin: 5px;
+}
+
+.footer {
+    a {
+        text-decoration: none;
+    }
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
 }
 
 .gone {
@@ -79,7 +89,6 @@ button {
 }
 
 // Chart
-
 circle.commit {
     stroke: @dark-blue;
     stroke-width: 2px;
@@ -122,7 +131,6 @@ circle.commit {
 }
 
 // Tooltips
-
 .d3-tip {
     line-height: 1;
     font-weight: normal;
