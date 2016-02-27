@@ -101,7 +101,7 @@ viz.chart = (function() {
     module.width = width;
     module.height = height;
 
-    _svgWrapper = d3.select('body')
+    _svgWrapper = d3.select('#container')
       .append('svg')
       .attr('id', 'viz')
       .attr('width', width + margin.left + margin.right)

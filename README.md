@@ -2,8 +2,8 @@
 gitviz allows you to visualize GitHub users' contributions.
 
 ## Why use gitviz
-* Track your teammates' contributions for school projects
-* Compare coding activities with your friends
+* Track your teammates' contributions for school projects, and find out the SLACKER
+* Compare coding activities with your friends, and see who codes MORE
 * Play with it for fun
 
 ## How to use gitviz
