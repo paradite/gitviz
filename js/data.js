@@ -79,6 +79,12 @@ viz.data = (function() {
       if (event['payload']['commits']) {
         event['payload']['commits'].forEach(function(commit) {
           if (isCommitValid(user, commit)) {
+            // add the repo attr
+            if (event['repo']['name']) {
+              commit['repo'] = event['repo']['name'];
+            } else {
+              commit['repo'] = null;
+            }
             _commits[user.username].push(commit);
           } else {
             // console.log("commit from others");
@@ -120,17 +126,19 @@ viz.data = (function() {
     d3.json(d.url)
       .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
       .get(function(err, res) {
-        _handleCommitDetail(user, cb, err, res);
+        _handleCommitDetail(user, cb, err, res, d.repo);
       });
   };
 
-  var _handleCommitDetail = function(user, cb, err, res) {
+  var _handleCommitDetail = function(user, cb, err, res, repo) {
     if (err) {
       console.log(err);
     } else {
       var commitDate = viz.util.parseDate(res['commit']['author']['date']);
       // Expose date at outer level
       res['date'] = commitDate;
+      // add repo attr
+      res['repo'] = repo;
       var dateOnly = viz.util.formatDateOnly(commitDate);
       addCommitByDate(user, dateOnly, res);
     }
@@ -141,6 +149,7 @@ viz.data = (function() {
   };
 
   var addCommitByDate = function(user, date, commit) {
+    // Check if the date is already present
     for (var i = 0; i < _commitsByDate[user.username].length; i++) {
       if (_commitsByDate[user.username][i]['dateStr'] === date) {
         _commitsByDate[user.username][i]['commits'].push(commit);
@@ -202,8 +211,13 @@ viz.data = (function() {
   };
 
   module.getSecondaryTooltipDataByIndex = function(d, i) {
-    return _getCommitTime(d.commits[i]) + ' ' + _getStatsContent(d.commits[i]) + ' ' + _getCommitMessage(d.commits[i]);
+    return _getCommitTime(d.commits[i]) + ' ' + _getCommitRepo(d.commits[i]) + ' ' +
+      _getStatsContent(d.commits[i]) + ' ' + _getCommitMessage(d.commits[i]);
   };
+
+  function _getCommitRepo(commit) {
+    return commit.repo;
+  }
 
   function _getCommitTime(commit) {
     return viz.util.formatTime(commit.date);

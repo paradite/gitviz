@@ -11,6 +11,4 @@ Gitviz allows you to visually compare GitHub users' contributions.
 * Magic
 
 ## Todo:
-- [ ] Display repo name on tooltip
-- [ ] Sort commits in tooltip
-- [ ] Get user's name based on commits
+- [ ] Find a way to match user and commits without knowing user's public email
