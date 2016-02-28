@@ -220,6 +220,7 @@ viz.chart = (function() {
       .scale(_xScale)
       .orient('bottom')
       .tickFormat(d3.time.format('%d %b'))
+      .ticks(d3.time.day, 2)
       .tickSize(5);
 
     var brushxAxis = d3.svg.axis()
@@ -234,7 +235,11 @@ viz.chart = (function() {
   };
 
   module.setScaleDomain = function(domain) {
-    var midpoint = new Date((domain[0].getTime() + domain[1].getTime()) / 2);
+    var duration = (domain[1].getTime() - domain[0].getTime()) / 4 * 3;
+    if (duration > 864000000) { // 1000*60*60*24*10
+      duration = 864000000;
+    }
+    var midpoint = new Date(domain[1].getTime() - duration);
 
     _xScale.domain(domain);
     _brushxScale.domain(domain);
