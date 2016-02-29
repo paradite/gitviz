@@ -10,7 +10,8 @@
   },
   "globals": {
     "d3": false,
-    "viz":true
+    "viz": true,
+    "async": false
   },
   "env": {
     "browser": true,

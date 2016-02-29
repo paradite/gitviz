@@ -7,6 +7,7 @@ viz.data = (function() {
   var API_PUBLIC_EVENTS = '/events/public';
   var API_ORG = '/orgs/';
   var API_EVENTS = '/events';
+  var API_PAGE_2_PARAM = '?page=2';
 
   var _commits = {};
 
@@ -37,40 +38,51 @@ viz.data = (function() {
 
   module.getPubEvent = function(user, cb) {
     var url = API_BASE_URL + API_USER + user.username + API_PUBLIC_EVENTS;
-    d3.json(url)
-      .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
-      .get(function(err, data) {
-        if (err || data.length === 0) {
-          console.log(err);
-          cb('GitHub API error', null, null);
-          return;
-        }
+    var userDetailUrl = API_BASE_URL + API_USER + user.username;
 
-        // get user details
-        var userDetailUrl = API_BASE_URL + API_USER + user.username;
+    async.parallel([
+      function(callback) {
+        d3.json(url)
+          .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
+          .get(callback);
+      },
+      function(callback) {
+        d3.json(url + API_PAGE_2_PARAM)
+          .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
+          .get(callback);
+      },
+      function(callback) {
         d3.json(userDetailUrl)
           .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
-          .get(function(err, userdata) {
-            if (err || userdata.length === 0) {
-              console.log(err);
-              return;
-            }
-            if (userdata.email && user.email === null) {
-              user.email = userdata.email;
-            }
-            if (userdata.email === null && user.email === null) {
-              cb('There is no GitHub public email for ' + user.username + ', please enter mannually', null, null);
-              return;
-            }
-            if (userdata.name != null) {
-              user.name = userdata.name;
-            } else {
-              user.name = null;
-            }
-            _updateCommitsFromPushes(user, data.filter(_filterPushEvents));
-            _fetchCommitDetails(user, cb);
-          });
-      });
+          .get(callback);
+      }
+    ],
+    function(err, results) {
+      if (err) {
+        console.log(err);
+        cb('GitHub API error', null, null);
+        return;
+      }
+
+      var data1 = results[0];
+      var data = data1.concat(results[1]);
+      var userdata = results[2];
+
+      if (userdata.email && user.email === null) {
+        user.email = userdata.email;
+      }
+      if (userdata.email === null && user.email === null) {
+        cb('There is no GitHub public email for ' + user.username + ', please enter mannually', null, null);
+        return;
+      }
+      if (userdata.name != null) {
+        user.name = userdata.name;
+      } else {
+        user.name = null;
+      }
+      _updateCommitsFromPushes(user, data.filter(_filterPushEvents));
+      _fetchCommitDetails(user, cb);
+    });
   };
 
   var _updateCommitsFromPushes = function(user, data) {
@@ -140,7 +152,9 @@ viz.data = (function() {
       // add repo attr
       res['repo'] = repo;
       var dateOnly = viz.util.formatDateOnly(commitDate);
-      addCommitByDate(user, dateOnly, res);
+      if (!isCommitTooEarly(commitDate)) {
+        addCommitByDate(user, dateOnly, res);
+      }
     }
     _outStandingFeteches[user.username]--;
     if (_outStandingFeteches[user.username] === 0) {
@@ -181,7 +195,8 @@ viz.data = (function() {
   //   }
   // };
 
-  var _ValidDateEarliest = new Date(2016, 0, 11); // Semester start at Jan 11
+  var _date = new Date();
+  var _ValidDateEarliest = _date.setDate(_date.getDate() - 30); // Last month
 
   var isCommitTooEarly = function(date) {
     return date < _ValidDateEarliest;
