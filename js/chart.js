@@ -253,6 +253,8 @@ viz.chart = (function() {
       .call(brush.event);
 
     gBrush.selectAll('rect')
+      .attr('rx', 12)
+      .attr('ry', 12)
       .attr('height', brushHeight);
 
     _xScale.domain(brush.empty() ? _brushxScale.domain() : brush.extent());
