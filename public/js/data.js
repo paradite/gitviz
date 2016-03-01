@@ -141,11 +141,11 @@ viz.data = (function() {
     _outStandingFeteches[user.username]++;
 
     // use both browser and backend to send request to overcome the 6 connections limit
-    // backend is slower than browser
-    var finalURL = d.url;
-    if (Date.now() % 6 === 0) {
-      finalURL = _useBackend(d.url);
-    }
+    // backend is slower than browser in NUS, but faster than browser on heroku
+    var finalURL = _useBackend(d.url);
+    // if (Date.now() % 6 === 0) {
+    //   finalURL = _useBackend(d.url);
+    // }
     d3.json(finalURL)
     // d3.json(d.url)
       .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
