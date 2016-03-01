@@ -13,6 +13,8 @@ var API_ORG = '/orgs/';
 var API_EVENTS = '/events';
 var API_PAGE_2_PARAM = '?page=2';
 
+app.set('port', (process.env.PORT || 3000));
+
 app.use(compression());
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -53,6 +55,6 @@ app.get('*', function(req, res) {
   });
 });
 
-app.listen(3000, function() {
-  console.log('Backend listening on port 3000!');
+app.listen(app.get('port'), function() {
+  console.log('Backend listening on port ' + app.get('port') + '!');
 });

@@ -1,6 +1,8 @@
 # Gitviz
 Gitviz allows you to visually compare GitHub users' contributions.
 
+Now hosted on [heroku](https://gitviz-paradite.herokuapp.com/)
+
 ## Why use Gitviz
 * Track your teammates' contributions for the project, and find out the SLACKER
 * Compare coding activities with your friends, and see who codes MORE
