@@ -42,17 +42,17 @@ viz.data = (function() {
 
     async.parallel([
       function(callback) {
-        d3.json(url)
+        d3.json(_useBackend(url))
           .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
           .get(callback);
       },
       function(callback) {
-        d3.json(url + API_PAGE_2_PARAM)
+        d3.json(_useBackend(url + API_PAGE_2_PARAM))
           .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
           .get(callback);
       },
       function(callback) {
-        d3.json(userDetailUrl)
+        d3.json(_useBackend(userDetailUrl))
           .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
           .get(callback);
       }
@@ -130,12 +130,24 @@ viz.data = (function() {
     });
   };
 
+  var _useBackend = function(url) {
+    return url.replace(API_BASE_URL, '');
+  };
+
   var _fetchCommitDetail = function(user, cb, d) {
     if (!_outStandingFeteches[user.username]) {
       _outStandingFeteches[user.username] = 0;
     }
     _outStandingFeteches[user.username]++;
-    d3.json(d.url)
+
+    // use both browser and backend to send request to overcome the 6 connections limit
+    // backend is slower than browser
+    var finalURL = d.url;
+    if (Date.now() % 6 === 0) {
+      finalURL = _useBackend(d.url);
+    }
+    d3.json(finalURL)
+    // d3.json(d.url)
       .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
       .get(function(err, res) {
         _handleCommitDetail(user, cb, err, res, d.repo);
@@ -196,7 +208,7 @@ viz.data = (function() {
   // };
 
   var _date = new Date();
-  var _ValidDateEarliest = _date.setDate(_date.getDate() - 30); // Last month
+  var _ValidDateEarliest = _date.setDate(_date.getDate() - 15); // Last month
 
   var isCommitTooEarly = function(date) {
     return date < _ValidDateEarliest;

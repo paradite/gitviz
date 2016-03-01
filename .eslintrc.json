@@ -11,7 +11,8 @@
   "globals": {
     "d3": false,
     "viz": true,
-    "async": false
+    "async": false,
+    "__dirname": false
   },
   "env": {
     "browser": true,

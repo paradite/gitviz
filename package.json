@@ -1,0 +1,25 @@
+{
+  "name": "gitviz",
+  "version": "1.0.0",
+  "description": "Visually compare GitHub contributions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paradite/gitviz.git"
+  },
+  "author": "paradite",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/paradite/gitviz/issues"
+  },
+  "homepage": "https://github.com/paradite/gitviz",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "compression": "^1.6.1",
+    "express": "^4.13.4",
+    "request": "^2.69.0"
+  }
+}
