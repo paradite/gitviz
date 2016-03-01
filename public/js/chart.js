@@ -22,8 +22,8 @@ viz.chart = (function() {
 
   module.rowHeight = 45;
 
-  var brushHeight = 30;
-  var brushMargin = 30;
+  var brushHeight = 15;
+  var brushMargin = 50;
 
   var brush = d3.svg.brush();
   var gBrush;
@@ -226,9 +226,9 @@ viz.chart = (function() {
     var brushxAxis = d3.svg.axis()
       .scale(_brushxScale)
       .orient('bottom')
-      .ticks(5)
+      .ticks(0)
       .tickFormat(d3.time.format('%d %b'))
-      .tickSize(5);
+      .tickSize(-10);
 
     _xAxisElement.call(xAxis);
     _brushAxisElement.call(brushxAxis);
@@ -252,9 +252,9 @@ viz.chart = (function() {
       .call(brush)
       .call(brush.event);
 
-    gBrush.selectAll('rect')
-      .attr('rx', 12)
-      .attr('ry', 12)
+    gBrush.selectAll('rect.extent')
+      .attr('rx', 6)
+      .attr('ry', 6)
       .attr('height', brushHeight);
 
     _xScale.domain(brush.empty() ? _brushxScale.domain() : brush.extent());
