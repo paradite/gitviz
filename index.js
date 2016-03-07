@@ -11,6 +11,9 @@ var API_ORG = '/orgs/';
 var API_EVENTS = '/events';
 var API_PAGE_2_PARAM = '?page=2';
 
+var inMemoryCache = [];
+var CACHE_MAX = 500;
+
 app.set('port', (process.env.PORT || 3000));
 
 app.use(compression());
@@ -30,7 +33,46 @@ app.use(function timeLog(req, res, next) {
   next();
 });
 
+function addToCache(url, data) {
+  console.log('adding url ' + url + ' to cache');
+  inMemoryCache.push([url, data, Date.now()]);
+  if (inMemoryCache.length > CACHE_MAX) {
+    console.log('cache size limit reached');
+    inMemoryCache.shift();
+  }
+}
+
+function isFresh(cache) {
+  return (Date.now() - cache[2]) < 3600000; // 1 hour
+}
+
+function getCache(url) {
+  for (var i = 0; i < inMemoryCache.length; i++) {
+    if (inMemoryCache[i][0] === url && isFresh(inMemoryCache[i])) {
+      console.log('cache fresh: ' + url);
+      return inMemoryCache[i][1];
+    } else if (inMemoryCache[i][0] === url) {
+      // not fresh
+      console.log('cache not fresh: ' + url);
+      inMemoryCache.splice(i, 1);
+      return null;
+    }
+  }
+  console.log('cache miss: ' + url);
+  return null;
+}
+
 app.get('*', function(req, res) {
+  // check in-memory cache
+  var cache = getCache(req.originalUrl);
+  if (cache != null) {
+    console.log('cache hit: ' + req.originalUrl);
+    res.set('Content-Type', 'application/json');
+    res.send(cache);
+    return;
+  }
+
+  console.log('cache not available: ' + req.originalUrl);
   // use server as proxy
   var newurl = API_BASE_URL + req.originalUrl;
   var options = {
@@ -47,6 +89,7 @@ app.get('*', function(req, res) {
       // console.log(response);
       res.set('Content-Type', 'application/json');
       res.send(body);
+      addToCache(req.originalUrl, body);
     } else {
       res.sendStatus(404);
     }

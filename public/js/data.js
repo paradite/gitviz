@@ -23,8 +23,7 @@ viz.data = (function() {
 
   module.getOrgEvent = function(org, cb) {
     var url = API_BASE_URL + API_ORG + org + API_EVENTS;
-    d3.json(url)
-      .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
+    d3.json(_useBackend(url))
       .get(function(err, data) {
         if (err) {
           console.log(err);
@@ -43,17 +42,14 @@ viz.data = (function() {
     async.parallel([
       function(callback) {
         d3.json(_useBackend(url))
-          .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
           .get(callback);
       },
       function(callback) {
         d3.json(_useBackend(url + API_PAGE_2_PARAM))
-          .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
           .get(callback);
       },
       function(callback) {
         d3.json(_useBackend(userDetailUrl))
-          .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
           .get(callback);
       }
     ],
@@ -148,7 +144,6 @@ viz.data = (function() {
     // }
     d3.json(finalURL)
     // d3.json(d.url)
-      .header('Authorization', 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ==')
       .get(function(err, res) {
         _handleCommitDetail(user, cb, err, res, d.repo);
       });
