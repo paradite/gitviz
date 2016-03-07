@@ -1,9 +1,7 @@
 var compression = require('compression');
 var express = require('express');
-var bodyParser = require('body-parser');
 var app = express();
 var request = require('request');
-var router = express.Router();
 var path = require('path');
 
 var API_BASE_URL = 'https://api.github.com';
@@ -39,7 +37,7 @@ app.get('*', function(req, res) {
     url: newurl,
     headers: {
       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36',
-      'Authorization': 'Basic cGFyYWRpdGU6YTFhY2MzM2FlZDU2ZGE5OTg4YzY1NGJkMjQxNzdiZTY1NjFkZTllZQ=='
+      'Authorization': process.env.AUTH
     },
     'gzip': true
   };
