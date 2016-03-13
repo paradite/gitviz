@@ -11,6 +11,27 @@ body {
 }
 
 // home page
+.enter-div {
+    margin: 0 auto;
+    width: 150px;
+
+    padding: 10px 0px;
+    background: @white;
+    color: @dark-blue;
+    border-radius: 4px;
+
+    a {
+        font-size: 18px;
+        padding: 10px 37px;
+        font-family: sans-serif;
+        color: @dark-blue;
+    }
+}
+
+.enter-div:hover {
+    background: @light-blue;
+}
+
 hr {
     width: 30%;
     display: block;
@@ -67,10 +88,11 @@ hr {
 
 .dark-bg {
     padding: 10px 0px;
-    a {
-        color: @white;
-    }
     background-color: @dark-blue;
+    color: @white;
+}
+
+.dark-bg > a {
     color: @white;
 }
 
