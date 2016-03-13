@@ -111,9 +111,9 @@ viz.chart = (function() {
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
       .attr('class', 'brush');
 
-    _brushAxisElement = _svgWrapper.append('g')
-      .attr('class', 'x axis')
-      .attr('transform', 'translate(' + margin.left + ',' + (margin.top + brushHeight) + ')');
+    // _brushAxisElement = _svgWrapper.append('g')
+    //   .attr('class', 'x axis')
+    //   .attr('transform', 'translate(' + margin.left + ',' + (margin.top + brushHeight) + ')');
 
     var container = _svgWrapper.append('g')
       .attr('transform', 'translate(' + margin.left + ',' + (margin.top + brushHeight + brushMargin) + ')')
@@ -223,15 +223,15 @@ viz.chart = (function() {
       .ticks(d3.time.day, 2)
       .tickSize(5);
 
-    var brushxAxis = d3.svg.axis()
-      .scale(_brushxScale)
-      .orient('bottom')
-      .ticks(0)
-      .tickFormat(d3.time.format('%d %b'))
-      .tickSize(-10);
+    // var brushxAxis = d3.svg.axis()
+    //   .scale(_brushxScale)
+    //   .orient('bottom')
+    //   .ticks(0)
+    //   .tickFormat(d3.time.format('%d %b'))
+    //   .tickSize(0);
 
     _xAxisElement.call(xAxis);
-    _brushAxisElement.call(brushxAxis);
+    // _brushAxisElement.call(brushxAxis);
   };
 
   module.setScaleDomain = function(domain) {
@@ -253,9 +253,16 @@ viz.chart = (function() {
       .call(brush.event);
 
     gBrush.selectAll('rect.extent')
-      .attr('rx', 6)
-      .attr('ry', 6)
+      .attr('rx', 4)
+      .attr('ry', 4)
       .attr('height', brushHeight);
+
+    gBrush.selectAll('rect.background')
+      .attr('y', -2)
+      .attr('rx', 4)
+      .attr('ry', 4)
+      .attr('height', brushHeight + 4)
+      .style('visibility', 'visible');
 
     _xScale.domain(brush.empty() ? _brushxScale.domain() : brush.extent());
   };

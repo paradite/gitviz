@@ -24,6 +24,10 @@ app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+app.get('/app', function(req, res) {
+  res.sendFile(path.join(__dirname, 'public', 'app.html'));
+});
+
 app.use(function timeLog(req, res, next) {
   var start = Date.now();
   res.on('finish', function() {
@@ -91,6 +95,8 @@ app.get('*', function(req, res) {
       res.send(body);
       addToCache(req.originalUrl, body);
     } else {
+      console.log('error: ' + error);
+      console.log(body);
       res.sendStatus(404);
     }
   });

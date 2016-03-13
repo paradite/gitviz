@@ -1,5 +1,6 @@
 @dark-blue: #2D3142;
-@light-blue: #B0D7FF;
+// @light-blue: #B0D7FF;
+@light-blue: lighten(@dark-blue, 70%);
 @light-grey: #D8D5DB;
 @dark-grey: #D8D5DB;
 @lighter-blue: #EAE8FF;
@@ -9,6 +10,71 @@ body {
     margin: 0px;
 }
 
+// home page
+hr {
+    width: 30%;
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid @dark-blue;
+    padding: 0; 
+}
+
+.description-container {
+    p {
+        margin: 5px;
+    }
+    font-family: sans-serif;
+    width: 100%;
+    display: inline-block;
+    color: @dark-blue;
+    padding: 15px 0px;
+}
+
+.description {
+    width: 35%;
+    // text-align: center;
+    margin: 0 auto;
+    // border: 1px solid @dark-blue;
+    background-color: @light-blue;
+    border-radius: 4px;
+    padding: 20px;
+
+    .icon-left {
+        display: inline-block;
+        width: 10%;
+    }
+
+    .text-right {
+        display: inline-block;
+        width: 89%;
+        text-align: center;
+    }
+
+    .description-text {
+    }
+}
+
+
+.centered {
+    width: 100%;
+    text-align: center;
+}
+
+.title {
+    margin: 0px;
+}
+
+.dark-bg {
+    padding: 10px 0px;
+    a {
+        color: @white;
+    }
+    background-color: @dark-blue;
+    color: @white;
+}
+
+// input
 input,
 button {
     height: 20px;
@@ -27,7 +93,7 @@ input {
         display: inline-block;
         margin: 0px;
     }
-    margin-top: 5px;
+    margin-top: 15px;
 }
 
 .status {
@@ -36,39 +102,17 @@ input {
     padding-top: 5px;
 }
 
-.title {
-    margin: 0px;
-    padding: 10px 0px;
-    background-color: @dark-blue;
-    color: @white;
-    width: 100%;
-    text-align: center;
-}
-
-.description {
-    p {
-        margin: 5px;
-    }
-    font-family: sans-serif;
-    text-align: center;
-    width: 49%;
-    display: inline-block;
-    color: @dark-blue;
-    padding: 15px 0px;
-}
-
 .form {
-    color: @white;
-    background-color: @dark-blue;
     width: 100%;
     text-align: center;
     padding: 15px 0px;
+}
+
+a {
+    text-decoration: none;
 }
 
 .footer {
-    a {
-        text-decoration: none;
-    }
     text-align: center;
     width: 100%;
     bottom: 0;
@@ -132,11 +176,16 @@ circle.commit {
 }
 
 .brush .extent {
-    stroke: lighten(@dark-blue, 25%);
-    stroke-width: 2px;
+    // stroke: lighten(@dark-blue, 25%);
+    // stroke-width: 2px;
     fill: @dark-blue;
     // fill-opacity: .125;
     shape-rendering: crispEdges;
+}
+
+.brush .background {
+    fill: @white;
+    border: 1px solid @dark-blue;
 }
 
 // Text
