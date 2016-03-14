@@ -5,11 +5,11 @@ var request = require('request');
 var path = require('path');
 
 var API_BASE_URL = 'https://api.github.com';
-var API_USER = '/users/';
-var API_PUBLIC_EVENTS = '/events/public';
-var API_ORG = '/orgs/';
-var API_EVENTS = '/events';
-var API_PAGE_2_PARAM = '?page=2';
+// var API_USER = '/users/';
+// var API_PUBLIC_EVENTS = '/events/public';
+// var API_ORG = '/orgs/';
+// var API_EVENTS = '/events';
+// var API_PAGE_2_PARAM = '?page=2';
 
 var inMemoryCache = [];
 var CACHE_MAX = 500;

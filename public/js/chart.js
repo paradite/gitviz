@@ -1,7 +1,7 @@
-var viz = viz || {};
+d3.tip = require('./vendor/d3-tip');
 
 // DOM Manipulation through d3.js
-viz.chart = (function() {
+var chart = (function() {
   var _chartElement = null;
   var _svgWrapper = null;
   var _xAxisElement = null;
@@ -273,3 +273,5 @@ viz.chart = (function() {
 
   return module;
 })();
+
+module.exports = chart;

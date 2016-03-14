@@ -1,6 +1,4 @@
-var viz = viz || {};
-
-viz.ui = (function() {
+var ui = (function() {
   var module = {};
 
   module.hideSpinner = function() {
@@ -15,3 +13,5 @@ viz.ui = (function() {
 
   return module;
 }());
+
+module.exports = ui;

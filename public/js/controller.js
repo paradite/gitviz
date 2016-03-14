@@ -12,7 +12,7 @@ var siUsers = [{
   email: 'leowyijin@gmail.com'
 }];
 
-var defaultUsers = [{
+var authorUsers = [{
   username: 'paradite',
   email: 'zhuliangg11@gmail.com'
 }];
@@ -108,12 +108,17 @@ function getUserFromInput() {
   }
 }
 
-addNewUsers(defaultUsers);
+// addNewUsers(defaultUsers);
 
 var addButton = d3.select('#add-btn');
 // console.log(button);
 addButton.on('click', function() {
   addNewUser(getUserFromInput());
+});
+
+var addAuthorButton = d3.select('#author-btn');
+addAuthorButton.on('click', function() {
+  addNewUsers(authorUsers);
 });
 
 var siButton = d3.select('#si-btn');

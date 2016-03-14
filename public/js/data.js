@@ -1,7 +1,7 @@
-var viz = viz || {};
+var async = require('./vendor/async.min');
 
 // Data manipulation logic
-viz.data = (function() {
+var data = (function() {
   var API_BASE_URL = 'https://api.github.com';
   var API_USER = '/users/';
   var API_PUBLIC_EVENTS = '/events/public';
@@ -281,3 +281,4 @@ viz.data = (function() {
 
   return module;
 })();
+module.exports = data;

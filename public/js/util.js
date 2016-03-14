@@ -1,6 +1,4 @@
-var viz = viz || {};
-
-viz.util = (function() {
+var util = (function() {
   var module = {};
 
   module.parseDate = d3.time.format.utc('%Y-%m-%dT%H:%M:%SZ').parse;
@@ -44,3 +42,5 @@ if (!Array.prototype.includes) {
     return false;
   };
 }
+module.exports = util;
+
