@@ -10932,6 +10932,8 @@
 	  }
 	}
 
+	updateLink(allUsers);
+
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(3), __webpack_require__(2), __webpack_require__(10)))
 
 /***/ },

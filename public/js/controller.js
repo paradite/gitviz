@@ -170,3 +170,5 @@ if (urlObj.query && urlObj.query.users) {
     addNewUsers(queryUsers);
   }
 }
+
+updateLink(allUsers);
