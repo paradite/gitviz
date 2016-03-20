@@ -1,3 +1,7 @@
+var url = require('url');
+
+var allUsers = [];
+
 var siUsers = [{
   username: 'digawp',
   email: 'digawp@gmail.com'
@@ -52,6 +56,8 @@ function handleNewCommits(err, user, commits) {
     d3.select('.status').text('Empty data');
     return;
   }
+  allUsers.push(user);
+  updateLink(allUsers);
   updateAxis();
   d3.select('.status').text('');
   d3.select('#githubID-input').node().value = '';
@@ -127,3 +133,40 @@ siButton.on('click', function() {
 });
 // addNewOrgs(defaultOrgs);
 // console.log(button);
+
+function updateLink(users) {
+  d3.select('#teamlink').attr('value', generateLink(users));
+}
+
+function generateLink(users) {
+  var baseURL = window.location.href.split('?')[0];
+  baseURL = baseURL + '?users=' + users.map(function(u) { return u.username; }).join(',');
+  baseURL = baseURL + '&emails=' + users.map(function(u) { return u.email; }).join(',');
+  return baseURL;
+}
+
+var urlObj = url.parse(window.location.href, true);
+
+console.log(urlObj);
+
+if (urlObj.query && urlObj.query.users) {
+  var usernames = urlObj.query.users.split(',');
+  var emails = urlObj.query.emails.split(',');
+  var queryUsers = [];
+  for (var i = 0; i < usernames.length; i++) {
+    if (usernames[i] && emails[i]) {
+      queryUsers.push({
+        username: usernames[i],
+        email: emails[i]
+      });
+    } else if (usernames[i]) {
+      queryUsers.push({
+        username: usernames[i],
+        email: null
+      });
+    }
+  }
+  if (queryUsers.length > 0) {
+    addNewUsers(queryUsers);
+  }
+}
