@@ -3,6 +3,9 @@ var url = require('url');
 var allUsers = [];
 
 var siUsers = [{
+  username: 'paradite',
+  email: 'zhuliangg11@gmail.com'
+}, {
   username: 'digawp',
   email: 'digawp@gmail.com'
 }, {
@@ -146,8 +149,6 @@ function generateLink(users) {
 }
 
 var urlObj = url.parse(window.location.href, true);
-
-console.log(urlObj);
 
 if (urlObj.query && urlObj.query.users) {
   var usernames = urlObj.query.users.split(',');

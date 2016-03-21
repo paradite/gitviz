@@ -62,7 +62,7 @@ var chart = (function() {
 
   function applyStyle(style, tip) {
     this.attr('r', function(d) {
-        return style.r * Math.sqrt(viz.data.sizeAccessor(d));
+        return style.r * Math.log2(viz.data.sizeAccessor(d));
       })
       .attr('fill', style.fill)
       .attr('stroke', style.color)
@@ -258,10 +258,9 @@ var chart = (function() {
       .attr('height', brushHeight);
 
     gBrush.selectAll('rect.background')
-      .attr('y', -2)
       .attr('rx', 4)
       .attr('ry', 4)
-      .attr('height', brushHeight + 4)
+      .attr('height', brushHeight)
       .style('visibility', 'visible');
 
     _xScale.domain(brush.empty() ? _brushxScale.domain() : brush.extent());

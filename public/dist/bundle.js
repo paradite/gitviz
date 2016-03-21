@@ -119,7 +119,7 @@
 
 	  function applyStyle(style, tip) {
 	    this.attr('r', function(d) {
-	        return style.r * Math.sqrt(__webpack_provided_viz_dot_data.sizeAccessor(d));
+	        return style.r * Math.log2(__webpack_provided_viz_dot_data.sizeAccessor(d));
 	      })
 	      .attr('fill', style.fill)
 	      .attr('stroke', style.color)
@@ -315,10 +315,9 @@
 	      .attr('height', brushHeight);
 
 	    gBrush.selectAll('rect.background')
-	      .attr('y', -2)
 	      .attr('rx', 4)
 	      .attr('ry', 4)
-	      .attr('height', brushHeight + 4)
+	      .attr('height', brushHeight)
 	      .style('visibility', 'visible');
 
 	    _xScale.domain(brush.empty() ? _brushxScale.domain() : brush.extent());
@@ -10764,6 +10763,9 @@
 	var allUsers = [];
 
 	var siUsers = [{
+	  username: 'paradite',
+	  email: 'zhuliangg11@gmail.com'
+	}, {
 	  username: 'digawp',
 	  email: 'digawp@gmail.com'
 	}, {
@@ -10907,8 +10909,6 @@
 	}
 
 	var urlObj = url.parse(window.location.href, true);
-
-	console.log(urlObj);
 
 	if (urlObj.query && urlObj.query.users) {
 	  var usernames = urlObj.query.users.split(',');
