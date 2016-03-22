@@ -14,7 +14,8 @@ gulp.task('build', function() {
           'viz.ui': './ui',
           'viz.data': './data',
           'viz.util': './util'
-        })
+        }),
+        new webpack.optimize.UglifyJsPlugin({minimize: true})
       ]
     }))
     .pipe(gulp.dest('public/dist/'));
