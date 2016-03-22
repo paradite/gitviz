@@ -106,13 +106,20 @@ input#teamlink {
     width: 400px;
 }
 
-input,
-button {
+input {
     height: 20px;
 }
 
 button {
+    border-radius: 4px;
     margin-top: 5px;
+    padding: 5px 10px;
+    background: white;
+    border: solid 1px gray;
+}
+
+button:hover {
+    background: lighten(@dark-blue, 65%);
 }
 
 input {
