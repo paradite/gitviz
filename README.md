@@ -1,4 +1,6 @@
 # Gitviz
+[![Code Climate](https://codeclimate.com/github/paradite/gitviz/badges/gpa.svg)](https://codeclimate.com/github/paradite/gitviz)
+
 Gitviz allows you to visually compare GitHub users' contributions.
 
 Now hosted on [heroku](https://gitviz-paradite.herokuapp.com/)
