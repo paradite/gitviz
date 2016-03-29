@@ -24,4 +24,6 @@ ratings:
   - "**.php"
   - "**.py"
   - "**.rb"
-exclude_paths: []
+exclude_paths:
+  - "public/dist/**.js"
+  - "public/js/vendor/**.js"
