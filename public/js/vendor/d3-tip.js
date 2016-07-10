@@ -53,8 +53,9 @@
           scrollTop  = document.documentElement.scrollTop || document.body.scrollTop,
           scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
 
-      nodel.html(content)
-        .style({ opacity: 1, 'pointer-events': 'all' })
+      // The span is the triangle
+      nodel.html(content + '<span class="d3-tip__pin"></span>')
+        .style({ opacity: 1, 'pointer-events': 'all', display: 'block' })
 
       while(i--) nodel.classed(directions[i], false)
       coords = direction_callbacks.get(dir).apply(this)
@@ -176,6 +177,24 @@
 
     function direction_n() {
       var bbox = getScreenBBox()
+      // check if the tooltip will go overflow right side and left side of the page
+      var screenRect = document.body.getBoundingClientRect()
+      if (bbox.n.x + node.offsetWidth/2 > screenRect.width) {
+        diff = ( bbox.n.x + node.offsetWidth/2 ) - screenRect.width
+        node.children[node.children.length - 1].style.left = (node.offsetWidth / 2 + diff) + 'px'
+        return {
+          top:  bbox.n.y - node.offsetHeight,
+          left: bbox.n.x - node.offsetWidth / 2 - diff
+        }
+      }
+      if (bbox.n.x - node.offsetWidth/2 < 0) {
+        diff = node.offsetWidth/2 - bbox.n.x
+        node.children[node.children.length - 1].style.left = (node.offsetWidth / 2 - diff) + 'px'
+        return {
+          top:  bbox.n.y - node.offsetHeight,
+          left: bbox.n.x - node.offsetWidth / 2 + diff
+        }
+      }
       return {
         top:  bbox.n.y - node.offsetHeight,
         left: bbox.n.x - node.offsetWidth / 2

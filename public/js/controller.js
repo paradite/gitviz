@@ -118,9 +118,15 @@ function getUserFromInput() {
 }
 
 // addNewUsers(defaultUsers);
-
+var autoAddButton = d3.select('#auto-add-button');
 var addButton = d3.select('#add-btn');
-// console.log(button);
+
+autoAddButton.on('click', function() {
+  d3.select('#githubID-input').node().value = authorUsers[0].username;
+  // d3.select('.githubID-wrapper').classed('is-dirty', true);
+  // https://github.com/google/material-design-lite/issues/903#issuecomment-151109301
+  d3.select('.mdl-js-textfield').node().MaterialTextfield.checkDirty();
+});
 addButton.on('click', function() {
   addNewUser(getUserFromInput());
 });

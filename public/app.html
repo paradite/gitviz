@@ -2,63 +2,85 @@
 <html>
 
 <head>
-    <title>Gitviz - Visual comparison of GitHub contributions</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.blue_grey-indigo.min.css" />
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="css/spinner/spinner.css">
-    <!-- <link rel="stylesheet" href="css/font-awesome.min.css"> -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+  <title>Gitviz - Visual comparison of GitHub contributions</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.blue_grey-indigo.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" type="text/css" href="css/spinner/spinner.css">
+  <!-- <link rel="stylesheet" href="css/font-awesome.min.css"> -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
 </head>
 
 <body>
-    <!-- Spinner -->
-    <div id="spinner" class="overlay gone">
-        <div class="overlay-center">
-            <div class="spinner-loader">
-            </div>
-            <br>
-            <a class="loading-text">Fetching data from GitHub. This may take a few seconds or longer, depending on your connection speed.</a>
-        </div>
-    </div>
-    <div class="dark-bg centered">
-    <h1 class="title">Gitviz</h1>
-    </div>
-    <div class="form">
-        <input class="inputbox" id="githubID-input" placeholder="GitHub username" type="username" name="username" autocomplete="on"></input>
-        <input class="inputbox" id="email-input" placeholder="email(optional)" type="email" name="email" autocomplete="on"></input>
-        <br>
-        <button id="add-btn">Add user to tracker</button>
-    </div>
-    <div class="demo-div dark-bg centered">  
-      <p>Or try some examples:</p>
+  <!-- Spinner -->
+  <div id="spinner" class="overlay gone">
+    <div class="overlay-center">
+      <div class="spinner-loader">
+      </div>
       <br>
-      <button id="author-btn">Track a person</button>
-      <button id="si-btn">Track a team</button>
+      <a class="loading-text">Fetching data from GitHub. This may take a few seconds or longer, depending on your connection speed.</a>
     </div>
-    <div class="status centered"></div>
-    <div id="container">
-    </div>
-    <div class="dark-bg centered">
+  </div>
+  <div class="mdl-layout mdl-js-layout">
+    <header class="mdl-layout__header">
+      <div class="mdl-layout__header-row">
+        <a href="/app"><span class="mdl-layout__title mdl-navigation__link">Gitviz</span></a>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+          <a class="mdl-navigation__link" href="/app?users=mikelimantara,paradite,digawp,whattokingu,YijinL&emails=mike.bdg@gmail.com,zhuliangg11@gmail.com,digawp@gmail.com,zhengweihan.91@gmail.com,leowyijin@gmail.com" aria-label="demo">Demo</a>
+          <a class="mdl-navigation__link" href="https://github.com/paradite/gitviz" aria-label="paradite/gitviz on GitHub">GitHub</a>
+        </nav>
+      </div>
+    </header>
+    <main class="mdl-layout__content">
+      <div class="form">
+        <h6>
+          Add your team members to the tracker
+        </h6>
+        <button id="auto-add-button" class="mdl-button mdl-js-button">Example</button>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="githubID-input"
+            autocomplete="on">
+          <label class="mdl-textfield__label" for="githubID-input">GitHub username</label>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="email-input"
+            autocomplete="on">
+          <label class="mdl-textfield__label" for="email-input">Email(optional)</label>
+        </div>
+        <br>
+        <div>
+          <button id="add-btn" 
+          class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Add user</button>
+        </div>
+      </div>
+      <div class="status centered"></div>
+      <div id="container">
+      </div>
+      <div class="dark-bg centered">
         <p>Here's the link to your team:</p>
         <input onClick="this.select();" id="teamlink" type="text" name="link" value="">
-    </div>
-    <div class="footer">
-        <a class="github-button" href="https://github.com/paradite/gitviz" aria-label="paradite/gitviz on GitHub">Repo</a>
-    </div>
-    <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+      </div>
+    </main>
+  </div>
 </body>
 
 </html>
 <script type="text/javascript" src="dist/bundle.js"></script>
 <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+(function(i, s, o, g, r, a, m) {
+  i['GoogleAnalyticsObject'] = r;
+  i[r] = i[r] || function() {
+    (i[r].q = i[r].q || []).push(arguments)
+  }, i[r].l = 1 * new Date();
+  a = s.createElement(o),
+    m = s.getElementsByTagName(o)[0];
+  a.async = 1;
+  a.src = g;
+  m.parentNode.insertBefore(a, m)
+})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-  ga('create', 'UA-72333354-2', 'auto');
-  ga('send', 'pageview');
-
+ga('create', 'UA-72333354-2', 'auto');
+ga('send', 'pageview');
 </script>
