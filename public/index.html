@@ -2,53 +2,85 @@
 <html>
 
 <head>
-    <title>Gitviz - Visual comparison of GitHub contributions</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <!-- <link rel="stylesheet" href="css/font-awesome.min.css"> -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <title>Gitviz - Software project progress tracker</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.blue_grey-indigo.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <!-- <link rel="stylesheet" href="css/font-awesome.min.css"> -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
 </head>
 
 <body>
-    <div class="dark-bg centered">
-    <h1 class="title">Gitviz</h1>
-    <p>Compare GitHub contributions, visually</p>
-    </div>
-    <div class="description-container">
-        <div class="description">
-            <div class="icon-area"><i class="fa fa-tasks fa-3x"></i></div>
-            <div class="text-area">
-                <p class="description-text">Track your teammates' contributions for the project</p>
+  <div class="mdl-layout mdl-js-layout">
+    <header class="mdl-layout__header">
+      <div class="mdl-layout__header-row">
+        <span class="mdl-layout__title">Gitviz</span>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+          <a class="mdl-navigation__link" href="/app?users=mikelimantara,paradite,digawp,whattokingu,YijinL&emails=mike.bdg@gmail.com,zhuliangg11@gmail.com,digawp@gmail.com,zhengweihan.91@gmail.com,leowyijin@gmail.com" aria-label="demo">Demo</a>
+          <a class="mdl-navigation__link" href="https://github.com/paradite/gitviz" aria-label="paradite/gitviz on GitHub">GitHub</a>
+        </nav>
+      </div>
+    </header>
+    <main class="mdl-layout__content">
+      <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--6-col">
+          <div class="mdl-card intro-card">
+            <div class="mdl-card__title">
+              <div class="mdl-card__title-text"><i class="fa fa-tasks fa-2x"></i></div>
             </div>
-            <img src="demo1.png">
-        </div>
-    </div>
-    <!-- <hr> -->
-    <div class="dark-bg centered">
-        <div class="enter-div"><a href="/app">Launch app</a></div>
-    </div>
-    <div class="description-container">
-        <div class="description">
-            <div class="icon-area"><i class="fa fa-users fa-3x"></i></div>
-            <div class="text-area">
-                <p class="description-text">Check coding activities of your friends</p>
+            <div class="mdl-card__supporting-text">
+              Track progress for software projects
             </div>
-            <img src="demo2.png">
+            <div class="mdl-card__media">
+              <img src="demo1.png" border="0" alt="" width="100%">
+            </div>
+          </div>
         </div>
-    </div>
-    <div class="footer">
-        <a class="github-button" href="https://github.com/paradite/gitviz" aria-label="paradite/gitviz on GitHub">Repo</a>
-    </div>
-    <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+        <div class="mdl-cell mdl-cell--6-col">
+          <div class="mdl-card intro-card">
+            <div class="mdl-card__title">
+              <h2 class="mdl-card__title-text"><i class="fa fa-users fa-2x"></i></h2>
+            </div>
+            <div class="mdl-card__supporting-text">
+              Check coding activities of your friends
+            </div>
+            <div class="mdl-card__media">
+              <img src="demo2.png" border="0" alt="" width="100%">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--12-col">
+          <div class="centered">
+            <button class="enter-button mdl-button mdl-js-button mdl-button--primary" 
+            onclick="window.location.href='/app';">
+              Launch app
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- <hr> -->
+    </main>
+  </div>
 </body>
 
 </html>
 <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+(function(i, s, o, g, r, a, m) {
+  i['GoogleAnalyticsObject'] = r;
+  i[r] = i[r] || function() {
+    (i[r].q = i[r].q || []).push(arguments)
+  }, i[r].l = 1 * new Date();
+  a = s.createElement(o),
+    m = s.getElementsByTagName(o)[0];
+  a.async = 1;
+  a.src = g;
+  m.parentNode.insertBefore(a, m)
+})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-  ga('create', 'UA-72333354-2', 'auto');
-  ga('send', 'pageview');
-
+ga('create', 'UA-72333354-2', 'auto');
+ga('send', 'pageview');
 </script>
