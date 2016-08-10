@@ -203,12 +203,10 @@ var data = (function() {
   // };
 
   var _date = new Date();
-  var _ValidDateEarliest = _date.setDate(_date.getDate() - 15); // Last month
+  var _ValidDateEarliest = _date.setDate(_date.getDate() - 32); // Last month
 
   var isCommitTooEarly = function(date) {
-    // do not filter
-    return false;
-    // return date < _ValidDateEarliest;
+    return date < _ValidDateEarliest;
   };
 
   module.getDomain = function(accessor) {

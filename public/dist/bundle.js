@@ -10108,12 +10108,10 @@
 	  // };
 
 	  var _date = new Date();
-	  var _ValidDateEarliest = _date.setDate(_date.getDate() - 15); // Last month
+	  var _ValidDateEarliest = _date.setDate(_date.getDate() - 32); // Last month
 
 	  var isCommitTooEarly = function(date) {
-	    // do not filter
-	    return false;
-	    // return date < _ValidDateEarliest;
+	    return date < _ValidDateEarliest;
 	  };
 
 	  module.getDomain = function(accessor) {
@@ -10789,29 +10787,10 @@
 
 	var allUsers = [];
 
-	var siUsers = [{
-	  username: 'paradite',
-	  email: 'zhuliangg11@gmail.com'
-	}, {
-	  username: 'digawp',
-	  email: 'digawp@gmail.com'
-	}, {
-	  username: 'mikelimantara',
-	  email: 'mike.bdg@gmail.com'
-	}, {
-	  username: 'whattokingu',
-	  email: 'zhengweihan.91@gmail.com'
-	}, {
-	  username: 'YijinL',
-	  email: 'leowyijin@gmail.com'
-	}];
-
 	var authorUsers = [{
 	  username: 'paradite',
 	  email: 'zhuliangg11@gmail.com'
 	}];
-
-	// var defaultOrgs = ['nus-fboa2016-si'];
 
 	var margin = {
 	  top: 20,
@@ -10858,18 +10837,6 @@
 	  }
 	}
 
-	// function addNewOrg(org) {
-	//   myChart.initRow(org, currentRowNum);
-	//   currentRowNum++;
-	//   viz.data.getOrgEvent(org, handleNewCommits);
-	// }
-
-	// function addNewOrgs(orgs) {
-	//   orgs.forEach(function(org) {
-	//     addNewOrg(org);
-	//   });
-	// }
-
 	function addNewUser(user) {
 	  if (user === null) {
 	    return;
@@ -10904,7 +10871,6 @@
 	  }
 	}
 
-	// addNewUsers(defaultUsers);
 	var autoAddButton = d3.select('#auto-add-button');
 	var addButton = d3.select('#add-btn');
 
@@ -10917,18 +10883,6 @@
 	addButton.on('click', function() {
 	  addNewUser(getUserFromInput());
 	});
-
-	var addAuthorButton = d3.select('#author-btn');
-	addAuthorButton.on('click', function() {
-	  addNewUsers(authorUsers);
-	});
-
-	var siButton = d3.select('#si-btn');
-	siButton.on('click', function() {
-	  addNewUsers(siUsers);
-	});
-	// addNewOrgs(defaultOrgs);
-	// console.log(button);
 
 	function updateLink(users) {
 	  d3.select('#teamlink').attr('value', generateLink(users));
