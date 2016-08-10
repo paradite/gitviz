@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "./node_modules/.bin/gulp build",
-    "start": "npm run build && node index.js",
+    "builddev": "./node_modules/.bin/gulp dev",
+    "dev": "npm run builddev && node index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
