@@ -10123,8 +10123,8 @@
 	      }
 	    }
 	    var dates = d3.extent(domains);
-	    // Round to next day for last date
-	    return [dates[0], d3.time.day.offset(dates[1], 1)];
+	    // Add paddings to domain
+	    return [d3.time.day.offset(dates[0], -1), d3.time.day.offset(dates[1], 1)];
 	  };
 
 	  module.MAX_COMMITS = 5;
