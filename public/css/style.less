@@ -1,9 +1,9 @@
 @dark-blue: #2D3142;
+@grey-blue: rgb(96,125,139);
+@grey-blue-light: rgba(96,125,139,0.3);
 // @light-blue: #B0D7FF;
 @light-blue: lighten(@dark-blue, 50%);
-@light-grey: #D8D5DB;
-@dark-grey: #D8D5DB;
-@lighter-blue: #EAE8FF;
+@lighter-blue: #FCFBFF;
 @white: #FFFFFF;
 // UI
 body {
@@ -65,10 +65,6 @@ button {
     padding: 5px 10px;
     background: white;
     border: solid 1px gray;
-}
-
-button:hover {
-    background: lighten(@dark-blue, 65%);
 }
 
 input {
@@ -168,14 +164,12 @@ circle.commit {
 .brush .extent {
     // stroke: lighten(@dark-blue, 25%);
     // stroke-width: 2px;
-    fill: @dark-blue;
+    fill: @grey-blue;
     // fill-opacity: .125;
-    shape-rendering: crispEdges;
 }
 
 .brush .background {
-    fill: @white;
-    border: 1px solid @dark-blue;
+    fill: @grey-blue-light;
 }
 
 // Text
@@ -224,7 +218,7 @@ circle.commit {
 
 .d3-tip.n:after {
     content: "\25BC";
-    margin: -1px 0 0 0;
+    margin: -3px 0 0 0;
     top: 100%;
     left: 0;
     text-align: center;

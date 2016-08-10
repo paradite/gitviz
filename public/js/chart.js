@@ -18,6 +18,9 @@ var chart = (function() {
     'stroke-width': 2
   };
 
+  var rowColorOdd = 'black';
+  var rowColorEven = 'rgb(96,125,139)';
+
   var module = {};
 
   module.rowHeight = 45;
@@ -181,6 +184,8 @@ var chart = (function() {
   module.initRow = function(user, rowNum) {
     var FIRST_ROW_MARGIN = 15;
 
+    var rowColor = (rowNum % 2 === 0) ? rowColorEven : rowColorOdd;
+
     var row = _chartElement.append('g')
       .attr('transform', 'translate(0,' + ((rowNum) * module.rowHeight + FIRST_ROW_MARGIN) + ')')
       .attr('width', module.width)
@@ -192,12 +197,13 @@ var chart = (function() {
       .attr('x2', module.width)
       .attr('y2', 0)
       .attr('stroke-width', 1)
-      .attr('stroke', 'black');
+      .attr('stroke', rowColor);
 
     row.append('text')
       .classed('info', true)
       .text('@' + user.username)
       .attr('y', 8)
+      .attr('fill', rowColor)
       .style('dominant-baseline', 'text-before-edge');
 
     module.resizeHeight(module.height + module.rowHeight);
@@ -236,8 +242,8 @@ var chart = (function() {
 
   module.setScaleDomain = function(domain) {
     var duration = (domain[1].getTime() - domain[0].getTime()) / 4 * 3;
-    if (duration > 864000000) { // 1000*60*60*24*10
-      duration = 864000000;
+    if (duration > 1296000000) { // 1000*60*60*24*15 15 days
+      duration = 1296000000;
     }
     var midpoint = new Date(domain[1].getTime() - duration);
 
@@ -253,13 +259,13 @@ var chart = (function() {
       .call(brush.event);
 
     gBrush.selectAll('rect.extent')
-      .attr('rx', 4)
-      .attr('ry', 4)
+      .attr('rx', 5)
+      .attr('ry', 5)
       .attr('height', brushHeight);
 
     gBrush.selectAll('rect.background')
-      .attr('rx', 4)
-      .attr('ry', 4)
+      .attr('rx', 5)
+      .attr('ry', 5)
       .attr('height', brushHeight)
       .style('visibility', 'visible');
 
