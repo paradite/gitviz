@@ -8,19 +8,37 @@
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <link rel="stylesheet" type="text/css" href="css/spinner/spinner.css">
   <!-- <link rel="stylesheet" href="css/font-awesome.min.css"> -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"> -->
   <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+  <style>
+
+.arc text {
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+.arc path {
+  stroke: #fff;
+}
+
+h2 {
+  text-align: center;
+}
+
+#container {
+  text-align: center;
+}
+
+</style>
 </head>
 
 <body>
   <div class="mdl-layout__container">
     <div class="mdl-layout mdl-js-layout">
-      <main class="mdl-layout__content">
+      <main class="mdl-layout__content mdl-color--grey-100">
         <div class="mdl-grid">
-          <div class="mdl-cell mdl-cell--2-col">
+          <div class="mdl-cell mdl-cell--12-col mdl-color--white mdl-shadow--2dp">
             <h2>Contributions</h2>
-          </div>
-          <div class="mdl-cell mdl-cell--10-col">
             <div id="container">
             </div>
           </div>
