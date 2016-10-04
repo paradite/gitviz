@@ -22,6 +22,26 @@ gulp.task('build', function() {
     .pipe(gulp.dest('public/dist/'));
 });
 
+gulp.task('build-3219', function() {
+  return gulp.src(['public/js/controller-3219.js'])
+    .pipe(webpackstream({
+      output: {
+        filename: 'bundle-3219.js'
+      },
+      plugins: [
+        new webpack.ProvidePlugin({
+          'd3': 'd3',
+          'viz.chart': './chart',
+          'viz.ui': './ui',
+          'viz.data': './data',
+          'viz.util': './util'
+        }),
+        new webpack.optimize.UglifyJsPlugin({minimize: true})
+      ]
+    }))
+    .pipe(gulp.dest('public/dist/'));
+});
+
 gulp.task('dev', function() {
   return gulp.src(['public/js/*.js'])
     .pipe(webpackstream({
