@@ -1,3 +1,9 @@
+d3.tip = require('./vendor/d3-tip');
+
+// Constants
+COMMITS_CULL_THRESHOLD = 20;
+TOOLTIP_ANGLE_THRESHOLD = 0.2;
+
 viz.data.getContribution(handleNewContribution);
 
 function handleNewContribution(data) {
@@ -6,7 +12,9 @@ function handleNewContribution(data) {
   var g = svg.selectAll('.arc')
       .data(pie(data))
     .enter().append('g')
-      .attr('class', 'arc');
+      .attr('class', 'arc')
+      .on("mouseover", tip.show)
+      .on("mouseout", tip.hide);
 
   g.append('path')
       .attr('d', arc)
@@ -19,13 +27,39 @@ function handleNewContribution(data) {
 }
 
 function formatText(d) {
-  return d.data.author.login + ': ' + d.data.total;
+    console.log(d);
+    // Compute the angle
+    angle = d.endAngle - d.startAngle;
+
+    // Only display inline if the arc is large enough
+    return angle > TOOLTIP_ANGLE_THRESHOLD ? d.data.author.login + ': ' + d.data.total : "";
 }
 
 function filterImportant(data) {
-  console.log('filtering:');
-  console.log(data);
-  return data;
+  //console.log('filtering:');
+  //console.log(data);
+
+  // Filtering contributor with less than 2 total to Other
+  filteredData = [];
+  otherTotal = 0;
+  data.forEach(function(d) {
+    if (d.total > COMMITS_CULL_THRESHOLD) {
+        filteredData.push(d);
+    } else {
+        otherTotal += d.total;
+    }
+  });
+
+  // Assign Other contributors
+  filteredData.push({
+      author: {
+          id: 220893,
+          login: "Other"
+      },
+      total: otherTotal
+  });
+
+  return filteredData;
 }
 
 var width = 960;
@@ -51,6 +85,16 @@ var svg = d3.select('#container').append('svg')
     .attr('height', height)
   .append('g')
     .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+
+var tip = d3.tip()
+      .attr('class', 'd3-tip')
+      .offset(function() {
+          return [this.getBBox().height / 2, 0]
+      })
+      .html(function(d) {
+        return d.data.author.login + ": " + d.data.total;
+      });
+svg.call(tip);
 
 function type(d) {
   d.total = +d.total;
