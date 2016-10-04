@@ -11,6 +11,8 @@ var data = (function() {
 
   var API_REPO_CONTRIBUTOR = '/repos/tungnk1993/scrapy/stats/contributors';
 
+  var API_REPO_COMMITS = '/repos/tungnk1993/scrapy/commits';
+
   var _commits = {};
 
   var _commitsByDate = {};
@@ -25,6 +27,30 @@ var data = (function() {
 
   module.getContribution = function(cb) {
     var url = API_REPO_CONTRIBUTOR;
+    d3.json(_useBackend(url))
+      .get(function(err, data) {
+        if (err) {
+          console.log(err);
+        } else {
+          cb(data);
+        }
+      });
+  };
+
+  module.getRepoCommits = function(cb) {
+    var url = API_REPO_COMMITS;
+    d3.json(_useBackend(url))
+      .get(function(err, data) {
+        if (err) {
+          console.log(err);
+        } else {
+          cb(data);
+        }
+      });
+  };
+
+  module.getCommitDetails = function(commitObj, cb) {
+    var url = commitObj.url;
     d3.json(_useBackend(url))
       .get(function(err, data) {
         if (err) {

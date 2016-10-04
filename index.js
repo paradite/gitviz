@@ -32,6 +32,10 @@ app.get('/3219', function(req, res) {
   res.sendFile(path.join(__dirname, 'public', '3219.html'));
 });
 
+app.get('/3219-2', function(req, res) {
+  res.sendFile(path.join(__dirname, 'public', '3219-2.html'));
+});
+
 app.use(function timeLog(req, res, next) {
   var start = Date.now();
   res.on('finish', function() {

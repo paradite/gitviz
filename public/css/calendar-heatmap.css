@@ -1,0 +1,40 @@
+.monthpath {
+  fill: none;
+  stroke: #444444;
+  stroke-width: 1px;
+  shape-rendering: crispedges;
+}
+text.month-name,
+text.calendar-heatmap-legend-text,
+text.day-initial {
+  font-size: 10px;
+  fill: #aaaaaa;
+  font-family: Helvetica, arial, 'Open Sans', sans-serif
+}
+rect.day-cell {
+  shape-rendering: crispedges;
+}
+
+.day-cell.future {
+  stroke: none;
+  stroke-width: 0;
+  shape-rendering: crispedges;
+}
+
+rect.day-cell:hover {
+  stroke: #111111;
+  stroke-width: 1px;
+}
+.day-cell-tooltip {
+  position: absolute;
+  z-index: 9999;
+  padding: 5px 9px;
+  color: #bbbbbb;
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.85);
+  border-radius: 3px;
+  text-align: center;
+}
+.day-cell-tooltip > span {
+  font-family: Helvetica, arial, 'Open Sans', sans-serif
+}
