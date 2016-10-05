@@ -3,7 +3,7 @@ var webpackstream = require('webpack-stream');
 var webpack = require('webpack');
 
 gulp.task('build', function() {
-  return gulp.src(['public/js/*.js'])
+  return gulp.src(['public/js/controller.js'])
     .pipe(webpackstream({
       output: {
         filename: 'bundle.js'
