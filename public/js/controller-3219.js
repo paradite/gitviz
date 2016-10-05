@@ -43,6 +43,10 @@ function handleNewContribution(data) {
       .style('text-anchor', function(d) {
           return midAngle(d) < Math.PI ? "start" : "end";
       })
+      .style('font-size', function(d) {
+        console.log(Math.log(d.data.total));
+        return Math.log(d.data.total) * 3 + 'px';
+      })
       .text(formatText);
 
   // Polyline from the slice to text
