@@ -149,7 +149,6 @@ var chart = (function() {
 
   module.displayCommits = function(user, data) {
     var row = _chartElement.select('.' + user.username);
-    console.log(data);
     var circles = row.selectAll('circle.commit')
       .data(data);
 

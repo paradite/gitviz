@@ -51,7 +51,14 @@ var data = (function() {
       });
   };
 
+  var _clear = function() {
+    _commits = {};
+    _commitsByDate = {};
+    _outStandingFeteches = {};
+  };
+
   module.getRepoCommitsDetail = function(username, repo, cb) {
+    _clear();
     _getRepoCommits(username, repo, function(data) {
       data.forEach(function(commitObj) {
         var username = commitObj.author.login;
@@ -266,14 +273,30 @@ var data = (function() {
   var _date = new Date();
   var _ValidDateEarliest = _date.setDate(_date.getDate() - 32); // Last month
 
-  var earliestDateRestriction = true;
+  var earliestDateRistriction = true;
+  var rangeRistriction = false;
+  var startDate = null;
+  var endDate = null;
 
   module.setEarliestDateRestriction = function(restrict) {
-    earliestDateRestriction = restrict;
+    earliestDateRistriction = restrict;
+  };
+
+  module.setRangeRestriction = function(start, end) {
+    startDate = start;
+    endDate = end;
+    rangeRistriction = true;
+  };
+
+  module.removeRangeRestriction = function() {
+    rangeRistriction = false;
+    earliestDateRistriction = false;
   };
 
   var isCommitTooEarly = function(date) {
-    if (!earliestDateRestriction) {
+    if (rangeRistriction) {
+      return date > endDate || date < startDate;
+    } else if (!earliestDateRistriction) {
       return false;
     } else {
       return date < _ValidDateEarliest;

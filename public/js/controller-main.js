@@ -1,11 +1,20 @@
 var circleChart = require('./controller-circle');
 var donutChart = require('./controller-donut');
 
-viz.data.setEarliestDateRestriction(false);
-
 function addNewRepo(input) {
+  var start = d3.select('#startdate').node().value;
+  var end = d3.select('#enddate').node().value;
+  var startDate = viz.util.parseDatePicker(start);
+  var endDate = viz.util.parseDatePicker(end);
+  if (startDate && endDate) {
+    viz.data.setRangeRestriction(startDate, endDate);
+  } else {
+    viz.data.removeRangeRestriction();
+  }
+
   console.log(input.username);
   console.log(input.repo);
+
   circleChart.addNewRepo(input.username, input.repo);
   donutChart.initContributionChart(input.username, input.repo);
 }

@@ -44,10 +44,9 @@ h2 {
   <div class="mdl-layout mdl-js-layout">
     <header class="mdl-layout__header">
       <div class="mdl-layout__header-row">
-        <a href="/app"><span class="mdl-layout__title mdl-navigation__link">Gitviz</span></a>
+        <a href="/app"><span class="mdl-layout__title mdl-navigation__link">Git-Guard</span></a>
         <div class="mdl-layout-spacer"></div>
         <nav class="mdl-navigation">
-          <a class="mdl-navigation__link" href="/app?users=paradite,cheeaun,kanghj,yangshun&emails=zhuliangg11@gmail.com,cheeaun@gmail.com,kanghongjin@gmail.com,tay.yang.shun@gmail.com" aria-label="demo">Demo</a>
           <a class="mdl-navigation__link" href="https://github.com/paradite/gitviz" aria-label="paradite/gitviz on GitHub">GitHub</a>
         </nav>
       </div>
@@ -67,6 +66,11 @@ h2 {
             autocomplete="on" value="scrapy">
           <label class="mdl-textfield__label" for="repo-input">Repo Name</label>
         </div>
+        <div>
+          Duration:
+          <input type="date" name="start" value="2016-08-01" id="startdate"> to
+          <input type="date" name="end" value="2016-09-01" id="enddate">
+        </div>
         <br>
         <div>
           <button id="add-btn" 
@@ -74,8 +78,8 @@ h2 {
         </div>
       </div>
       <div class="status centered"></div>
-      <div id="container">
-      </div>
+      <div id="container"></div>
+      <div id="container2"></div>
     </main>
   </div>
   <script type="text/javascript" src="dist/bundle-3219.js"></script>

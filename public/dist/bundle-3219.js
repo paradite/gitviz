@@ -113,7 +113,9 @@
 	  __webpack_provided_viz_dot_data.getPubEvent(user, handleNewCommits);
 	};
 
-	circleChart.addNewRepo = function(username, repo) {
+	circleChart.addNewRepo = function(username, repo, duration) {
+	  console.log(duration);
+	  circleChart.duration = duration;
 	  __webpack_provided_viz_dot_ui.showSpinner();
 	  __webpack_provided_viz_dot_data.getRepoCommitsDetail(username, repo, handleRepoCommits);
 	};
@@ -125,19 +127,19 @@
 	    __webpack_provided_viz_dot_ui.hideSpinner();
 	    return;
 	  }
-	  console.log(user);
-	  console.log(commits);
-	  var row = d3.select('.' + user.username);
-	  if (row.node() === null) {
-	    __webpack_provided_viz_dot_chart.initRow(user, currentRowNum);
-	    currentRowNum++;
+	  if (commits.length > 0) {
+	    var row = d3.select('.' + user.username);
+	    if (row.node() === null) {
+	      __webpack_provided_viz_dot_chart.initRow(user, currentRowNum);
+	      currentRowNum++;
+	    }
+	    allUsers.push(user);
+	    updateAxis();
+	    // d3.select('#githubID-input').node().value = '';
+	    // d3.select('#repo-input').node().value = '';
+	    __webpack_provided_viz_dot_chart.displayCommits(user, commits);
 	  }
-	  allUsers.push(user);
-	  updateAxis();
-	  d3.select('.status').text('');
-	  d3.select('#githubID-input').node().value = '';
-	  d3.select('#repo-input').node().value = '';
-	  __webpack_provided_viz_dot_chart.displayCommits(user, commits);
+
 	  if (!__webpack_provided_viz_dot_data.existsOutStandingFetches()) {
 	    __webpack_provided_viz_dot_ui.hideSpinner();
 	  }
@@ -302,7 +304,6 @@
 
 	  module.displayCommits = function(user, data) {
 	    var row = _chartElement.select('.' + user.username);
-	    console.log(data);
 	    var circles = row.selectAll('circle.commit')
 	      .data(data);
 
@@ -10053,17 +10054,14 @@
 	      });
 	  };
 
-	  var _updateCommitsFromRepoCommit = function(commitObj) {
-	    var username = commitObj.author.login;
-	    // use the url that gives full commit info
-	    commitObj.commit.url = commitObj.url;
-	    if (!_commits.hasOwnProperty(username)) {
-	      _commits[username] = [];
-	    }
-	    _commits[username].push(commitObj.commit);
+	  var _clear = function() {
+	    _commits = {};
+	    _commitsByDate = {};
+	    _outStandingFeteches = {};
 	  };
 
 	  module.getRepoCommitsDetail = function(username, repo, cb) {
+	    _clear();
 	    _getRepoCommits(username, repo, function(data) {
 	      data.forEach(function(commitObj) {
 	        var username = commitObj.author.login;
@@ -10278,14 +10276,30 @@
 	  var _date = new Date();
 	  var _ValidDateEarliest = _date.setDate(_date.getDate() - 32); // Last month
 
-	  var earliestDateRestriction = true;
+	  var earliestDateRistriction = true;
+	  var rangeRistriction = false;
+	  var startDate = null;
+	  var endDate = null;
 
 	  module.setEarliestDateRestriction = function(restrict) {
-	    earliestDateRestriction = restrict;
+	    earliestDateRistriction = restrict;
+	  };
+
+	  module.setRangeRestriction = function(start, end) {
+	    startDate = start;
+	    endDate = end;
+	    rangeRistriction = true;
+	  };
+
+	  module.removeRangeRestriction = function() {
+	    rangeRistriction = false;
+	    earliestDateRistriction = false;
 	  };
 
 	  var isCommitTooEarly = function(date) {
-	    if (!earliestDateRestriction) {
+	    if (rangeRistriction) {
+	      return date > endDate || date < startDate;
+	    } else if (!earliestDateRistriction) {
 	      return false;
 	    } else {
 	      return date < _ValidDateEarliest;
@@ -10381,6 +10395,7 @@
 	  module.formatDateOnly = d3.time.format('%Y-%m-%d');
 	  module.formatTime = d3.time.format('%H:%M:%S');
 	  module.formatDateNice = d3.time.format('%d %b');
+	  module.parseDatePicker = d3.time.format.utc('%Y-%m-%d').parse;
 
 	  return module;
 	}());
@@ -11104,7 +11119,8 @@
 	      return d.total;
 	    });
 
-	  var svg = d3.select('#container').append('svg')
+	  d3.select('#container2').selectAll('*').remove();
+	  var svg = d3.select('#container2').append('svg')
 	    .attr('width', width)
 	    .attr('height', height)
 	    .append('g')
@@ -11139,14 +11155,23 @@
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(__webpack_provided_viz_dot_data, d3) {var circleChart = __webpack_require__(1);
+	/* WEBPACK VAR INJECTION */(function(d3, __webpack_provided_viz_dot_util, __webpack_provided_viz_dot_data) {var circleChart = __webpack_require__(1);
 	var donutChart = __webpack_require__(11);
 
-	__webpack_provided_viz_dot_data.setEarliestDateRestriction(false);
-
 	function addNewRepo(input) {
+	  var start = d3.select('#startdate').node().value;
+	  var end = d3.select('#enddate').node().value;
+	  var startDate = __webpack_provided_viz_dot_util.parseDatePicker(start);
+	  var endDate = __webpack_provided_viz_dot_util.parseDatePicker(end);
+	  if (startDate && endDate) {
+	    __webpack_provided_viz_dot_data.setRangeRestriction(startDate, endDate);
+	  } else {
+	    __webpack_provided_viz_dot_data.removeRangeRestriction();
+	  }
+
 	  console.log(input.username);
 	  console.log(input.repo);
+
 	  circleChart.addNewRepo(input.username, input.repo);
 	  donutChart.initContributionChart(input.username, input.repo);
 	}
@@ -11173,7 +11198,7 @@
 	  addNewRepo(getUserRepoFromInput());
 	});
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(3)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(5), __webpack_require__(4)))
 
 /***/ }
 /******/ ]);
