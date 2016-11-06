@@ -65,7 +65,7 @@ var chart = (function() {
 
   function applyStyle(style, tip) {
     this.attr('r', function(d) {
-        return style.r * Math.log2(viz.data.sizeAccessor(d));
+        return style.r * Math.log2(viz.data.sizeAccessor(d) + 1);
       })
       .attr('fill', style.fill)
       .attr('stroke', style.color)

@@ -42,7 +42,7 @@
   <div class="mdl-layout mdl-js-layout">
     <header class="mdl-layout__header">
       <div class="mdl-layout__header-row">
-        <a href="/app"><span class="mdl-layout__title mdl-navigation__link">Gitviz</span></a>
+        <a href="/app"><span class="mdl-layout__title mdl-navigation__link">Git-Guard</span></a>
         <div class="mdl-layout-spacer"></div>
         <nav class="mdl-navigation">
           <button type="button" class="mdl-button show-modal"><i class="fa fa-bell" aria-hidden="true"></i> Notification</button>
@@ -98,14 +98,19 @@
           <input class="mdl-textfield__input" type="text" id="repo-input" autocomplete="on" value="scrapy">
           <label class="mdl-textfield__label" for="repo-input">Repo Name</label>
         </div>
+        <div>
+          Duration:
+          <input type="date" name="start" value="2016-08-01" id="startdate"> to
+          <input type="date" name="end" value="2016-09-01" id="enddate">
+        </div>
         <br>
         <div>
           <button id="add-btn" class="mdl-button mdl-js-button mdl-button--raised mdl-button--primary">Add</button>
         </div>
       </div>
       <div class="status centered"></div>
-      <div id="container">
-      </div>
+      <div id="container"></div>
+      <div id="container2"></div>
     </main>
   </div>
   <script type="text/javascript" src="dist/bundle-3219.js"></script>

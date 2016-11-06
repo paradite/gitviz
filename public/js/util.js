@@ -7,6 +7,7 @@ var util = (function() {
   module.formatDateOnly = d3.time.format('%Y-%m-%d');
   module.formatTime = d3.time.format('%H:%M:%S');
   module.formatDateNice = d3.time.format('%d %b');
+  module.parseDatePicker = d3.time.format.utc('%Y-%m-%d').parse;
 
   return module;
 }());

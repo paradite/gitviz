@@ -3,9 +3,20 @@ var donutChart = require('./controller-donut');
 // var notificationDialog = require('./controller-notification-dialog');
 
 function addNewRepo(input) {
+  var start = d3.select('#startdate').node().value;
+  var end = d3.select('#enddate').node().value;
+  var startDate = viz.util.parseDatePicker(start);
+  var endDate = viz.util.parseDatePicker(end);
+  if (startDate && endDate) {
+    viz.data.setRangeRestriction(startDate, endDate);
+  } else {
+    viz.data.removeRangeRestriction();
+  }
+
   console.log(input.username);
   console.log(input.repo);
-  circleChart.addNewUser(input);
+
+  circleChart.addNewRepo(input.username, input.repo);
   donutChart.initContributionChart(input.username, input.repo);
 }
 

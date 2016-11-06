@@ -117,7 +117,8 @@ donutChart.initContributionChart = function(userName, repoName) {
       return d.total;
     });
 
-  var svg = d3.select('#container').append('svg')
+  d3.select('#container2').selectAll('*').remove();
+  var svg = d3.select('#container2').append('svg')
     .attr('width', width)
     .attr('height', height)
     .append('g')
