@@ -1,10 +1,12 @@
 var circleChart = require('./controller-circle');
 var donutChart = require('./controller-donut');
 
+viz.data.setEarliestDateRestriction(false);
+
 function addNewRepo(input) {
   console.log(input.username);
   console.log(input.repo);
-  circleChart.addNewUser(input);
+  circleChart.addNewRepo(input.username, input.repo);
   donutChart.initContributionChart(input.username, input.repo);
 }
 

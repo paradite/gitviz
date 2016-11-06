@@ -13,7 +13,7 @@ var data = (function() {
 
   var API_REPO_CONTRIBUTOR = '/stats/contributors';
 
-  var API_REPO_COMMITS = '/repos/tungnk1993/scrapy/commits';
+  var API_REPO_COMMITS = '/commits';
 
   var _commits = {};
 
@@ -27,8 +27,8 @@ var data = (function() {
     return event.type === 'PushEvent';
   };
 
-  module.getContribution = function(userName, repoName, cb) {
-    var url = API_REPO + '/' + userName + '/' + repoName + API_REPO_CONTRIBUTOR;
+  module.getContribution = function(username, repo, cb) {
+    var url = API_REPO + '/' + username + '/' + repo + API_REPO_CONTRIBUTOR;
     d3.json(_useBackend(url))
       .get(function(err, data) {
         if (err) {
@@ -39,8 +39,8 @@ var data = (function() {
       });
   };
 
-  module.getRepoCommits = function(cb) {
-    var url = API_REPO_COMMITS;
+  var _getRepoCommits = function(username, repo, cb) {
+    var url = API_REPO + '/' + username + '/' + repo + API_REPO_COMMITS;
     d3.json(_useBackend(url))
       .get(function(err, data) {
         if (err) {
@@ -49,6 +49,25 @@ var data = (function() {
           cb(data);
         }
       });
+  };
+
+  module.getRepoCommitsDetail = function(username, repo, cb) {
+    _getRepoCommits(username, repo, function(data) {
+      data.forEach(function(commitObj) {
+        var username = commitObj.author.login;
+        // use the url that gives full commit info
+        commitObj.commit.url = commitObj.url;
+        commitObj.commit.repo = repo;
+        if (!_commits.hasOwnProperty(username)) {
+          _commits[username] = [];
+        }
+        _commits[username].push(commitObj.commit);
+      });
+      console.log(_commits);
+      for (username in _commits) {
+        _fetchCommitDetails({username: username}, cb);
+      }
+    });
   };
 
   module.getCommitDetails = function(commitObj, cb) {
@@ -247,8 +266,18 @@ var data = (function() {
   var _date = new Date();
   var _ValidDateEarliest = _date.setDate(_date.getDate() - 32); // Last month
 
+  var earliestDateRestriction = true;
+
+  module.setEarliestDateRestriction = function(restrict) {
+    earliestDateRestriction = restrict;
+  };
+
   var isCommitTooEarly = function(date) {
-    return date < _ValidDateEarliest;
+    if (!earliestDateRestriction) {
+      return false;
+    } else {
+      return date < _ValidDateEarliest;
+    }
   };
 
   module.getDomain = function(accessor) {
