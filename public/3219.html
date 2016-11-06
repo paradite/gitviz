@@ -8,7 +8,7 @@
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <link rel="stylesheet" type="text/css" href="css/spinner/spinner.css">
   <!-- <link rel="stylesheet" href="css/font-awesome.min.css"> -->
-  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"> -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
   <style>
 
@@ -33,18 +33,50 @@ h2 {
 </head>
 
 <body>
-  <div class="mdl-layout__container">
-    <div class="mdl-layout mdl-js-layout">
-      <main class="mdl-layout__content mdl-color--grey-100">
-        <div class="mdl-grid">
-          <div class="mdl-cell mdl-cell--12-col mdl-color--white mdl-shadow--2dp">
-            <h2>Contributions</h2>
-            <div id="container">
-            </div>
-          </div>
-        </div>
-      </main>
+  <div id="spinner" class="overlay gone">
+    <div class="overlay-center">
+      <div class="spinner-loader">
+      </div>
+      <br>
+      <a class="loading-text">Fetching data from GitHub. This may take a few seconds or longer, depending on your connection speed.</a>
     </div>
+  </div>
+  <div class="mdl-layout mdl-js-layout">
+    <header class="mdl-layout__header">
+      <div class="mdl-layout__header-row">
+        <a href="/app"><span class="mdl-layout__title mdl-navigation__link">Gitviz</span></a>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+          <a class="mdl-navigation__link" href="/app?users=paradite,cheeaun,kanghj,yangshun&emails=zhuliangg11@gmail.com,cheeaun@gmail.com,kanghongjin@gmail.com,tay.yang.shun@gmail.com" aria-label="demo">Demo</a>
+          <a class="mdl-navigation__link" href="https://github.com/paradite/gitviz" aria-label="paradite/gitviz on GitHub">GitHub</a>
+        </nav>
+      </div>
+    </header>
+    <main class="mdl-layout__content">
+      <div class="form">
+        <h6>
+          Enter GitHub username and repo name
+        </h6>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="githubID-input"
+            autocomplete="on" value="tungnk1993">
+          <label class="mdl-textfield__label" for="githubID-input">GitHub username</label>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="repo-input"
+            autocomplete="on" value="scrapy">
+          <label class="mdl-textfield__label" for="repo-input">Repo Name</label>
+        </div>
+        <br>
+        <div>
+          <button id="add-btn" 
+          class="mdl-button mdl-js-button mdl-button--raised mdl-button--primary">Add</button>
+        </div>
+      </div>
+      <div class="status centered"></div>
+      <div id="container">
+      </div>
+    </main>
   </div>
   <script type="text/javascript" src="dist/bundle-3219.js"></script>
   <script>

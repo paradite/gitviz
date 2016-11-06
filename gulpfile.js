@@ -22,10 +22,13 @@ gulp.task('build', function() {
     .pipe(gulp.dest('public/dist/'));
 });
 
-gulp.task('build-3219', ['build-3219-1', 'build-3219-2']);
-
-gulp.task('build-3219-1', function() {
-  return gulp.src(['public/js/controller-3219.js'])
+gulp.task('build-3219', function() {
+  return gulp.src(
+    [
+      'public/js/controller-circle.js',
+      'public/js/controller-donut.js',
+      'public/js/controller-main.js'
+    ])
     .pipe(webpackstream({
       output: {
         filename: 'bundle-3219.js'
@@ -38,29 +41,7 @@ gulp.task('build-3219-1', function() {
           'viz.ui': './ui',
           'viz.data': './data',
           'viz.util': './util'
-        }),
-        new webpack.optimize.UglifyJsPlugin({minimize: true})
-      ]
-    }))
-    .pipe(gulp.dest('public/dist/'));
-});
-
-gulp.task('build-3219-2', function() {
-  return gulp.src(['public/js/controller-3219-2.js'])
-    .pipe(webpackstream({
-      output: {
-        filename: 'bundle-3219-2.js'
-      },
-      plugins: [
-        new webpack.ProvidePlugin({
-          'd3': 'd3',
-          'moment': 'moment',
-          'viz.chart': './chart',
-          'viz.ui': './ui',
-          'viz.data': './data',
-          'viz.util': './util'
-        }),
-        new webpack.optimize.UglifyJsPlugin({minimize: true})
+        })
       ]
     }))
     .pipe(gulp.dest('public/dist/'));

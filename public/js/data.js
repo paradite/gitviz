@@ -9,7 +9,9 @@ var data = (function() {
   var API_EVENTS = '/events';
   var API_PAGE_2_PARAM = '?page=2';
 
-  var API_REPO_CONTRIBUTOR = '/repos/tungnk1993/scrapy/stats/contributors';
+  var API_REPO = '/repos';
+
+  var API_REPO_CONTRIBUTOR = '/stats/contributors';
 
   var API_REPO_COMMITS = '/repos/tungnk1993/scrapy/commits';
 
@@ -25,8 +27,8 @@ var data = (function() {
     return event.type === 'PushEvent';
   };
 
-  module.getContribution = function(cb) {
-    var url = API_REPO_CONTRIBUTOR;
+  module.getContribution = function(userName, repoName, cb) {
+    var url = API_REPO + '/' + userName + '/' + repoName + API_REPO_CONTRIBUTOR;
     d3.json(_useBackend(url))
       .get(function(err, data) {
         if (err) {
