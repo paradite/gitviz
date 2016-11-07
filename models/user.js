@@ -9,6 +9,7 @@ AWS.config.update({ // Security = ...
 });
 
 var ddb = new AWS.DynamoDB();
+
 var tableName = "Users";
 
 module.exports.findUserById = function(id, done) {
@@ -115,6 +116,50 @@ module.exports.createUser = function (req, email, password, done) {
           return done(null, false, req.flash('signupMessage', "Apologies, please try again now. (" + err + ")"));
         } else {
           return done(null, params.Item);
+        }
+      })
+    }
+  });
+}
+
+module.exports.subscribe = function (emails, user) {
+  console.log("user email: ", user.email.S);
+  var params = {
+    "TableName": tableName,
+    "IndexName": "email-index",
+    "KeyConditions": {
+      "email": {
+        "ComparisonOperator": "EQ",
+        "AttributeValueList": [{ "S": user.email.S }]
+      }
+    }
+  }
+
+  ddb.query(params, function (err, data) {
+    if (err) {
+      console.error("Cannot find user", JSON.stringify(err, null, 2));
+    } else {
+      console.log(emails);
+      var userParams = {
+        "TableName": tableName,
+        "Key": {
+          "id": data.Items[0]["id"]
+        },
+        "UpdateExpression": "ADD #subscribedEmails :emails",
+        "ExpressionAttributeNames": {
+          "#subscribedEmails": "subscribedEmails"
+        },
+        "ExpressionAttributeValues": {
+          ":emails": { SS: emails }
+        },
+        "ReturnValues": "UPDATED_NEW"
+      };
+
+      ddb.updateItem(userParams, function (err, data) {
+        if (err) {
+          console.error("Cannot subscribes", JSON.stringify(err, null, 2));
+        } else {
+          console.log("Subcribe successful!");
         }
       })
     }

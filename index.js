@@ -17,6 +17,7 @@ require('./config/passport')(passport);
 app.use(require('morgan')('combined'));
 app.use(require('cookie-parser')());
 app.use(require('body-parser').urlencoded({ extended: true }));
+app.use(require('body-parser').json());
 app.use(require('express-session')({ secret: 'gitvizvizvizviz', resave: false, saveUninitialized: false }));
 
 // Initialize Passport and restore authentication state, if any, from the
@@ -55,6 +56,12 @@ app.get('/3219', require('connect-ensure-login').ensureLoggedIn(), function(req,
 // Hack solution to get the current user from client side.
 app.get('/api/current-user', require('connect-ensure-login').ensureLoggedIn(), function(req, res) {
   res.json(req.user);
+});
+
+app.post('/api/subscribe', require('connect-ensure-login').ensureLoggedIn(), function(req, res) {
+  var emails = req.body;
+  User.subscribe(emails, req.user);
+  res.send("OK");
 });
 
 // Authentication routes
