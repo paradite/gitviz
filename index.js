@@ -4,6 +4,34 @@ var app = express();
 var request = require('request');
 var path = require('path');
 
+// Authentication
+var passport = require('passport');
+var Strategy = require('passport-local').Strategy;
+var User = require(path.join(__dirname, '/models/user'));
+
+// Configure authentication strategies
+require('./config/passport')(passport);
+
+// Use application-level middleware for common functionality, including
+// logging, parsing, and session handling.
+app.use(require('morgan')('combined'));
+app.use(require('cookie-parser')());
+app.use(require('body-parser').urlencoded({ extended: true }));
+app.use(require('express-session')({ secret: 'gitvizvizvizviz', resave: false, saveUninitialized: false }));
+
+// Initialize Passport and restore authentication state, if any, from the
+// session.
+app.use(passport.initialize());
+app.use(passport.session());
+
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+
+  res.redirect('/login');
+}
+
 var API_BASE_URL = 'https://api.github.com';
 // var API_USER = '/users/';
 // var API_PUBLIC_EVENTS = '/events/public';
@@ -28,9 +56,35 @@ app.get('/app', function(req, res) {
   res.sendFile(path.join(__dirname, 'public', 'app.html'));
 });
 
-app.get('/3219', function(req, res) {
+app.get('/3219', require('connect-ensure-login').ensureLoggedIn(), function(req, res) {
   res.sendFile(path.join(__dirname, 'public', '3219.html'));
 });
+
+// Authentication routes
+app.get('/login', function(req, res) {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+app.post('/login', passport.authenticate('local-login', { failureRedirect: '/login' }), 
+  function(req, res) {
+    res.redirect('/3219');
+  });
+
+app.get('/logout', function(req, res) {
+  req.logout();
+  res.redirect('/');
+});
+
+app.get('/register', function(req, res) {
+  res.sendFile(path.join(__dirname, 'public', 'register.html'));
+});
+
+app.post('/register', passport.authenticate('local-signup', { failureRedirect: '/register' }), 
+  function(req, res) {
+    res.redirect('/3219');
+  });
+
+// End of Authentication routes
 
 app.get('/3219-2', function(req, res) {
   res.sendFile(path.join(__dirname, 'public', '3219-2.html'));
