@@ -46,7 +46,8 @@
 
 	__webpack_require__(1);
 	__webpack_require__(11);
-	module.exports = __webpack_require__(12);
+	__webpack_require__(12);
+	module.exports = __webpack_require__(13);
 
 
 /***/ },
@@ -443,7 +444,7 @@
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;!function() {
 	  var d3 = {
-	    version: "3.5.16"
+	    version: "3.5.17"
 	  };
 	  var d3_arraySlice = [].slice, d3_array = function(list) {
 	    return d3_arraySlice.call(list);
@@ -3968,7 +3969,7 @@
 	        λ0 = λ, sinφ0 = sinφ, cosφ0 = cosφ, point0 = point;
 	      }
 	    }
-	    return (polarAngle < -ε || polarAngle < ε && d3_geo_areaRingSum < 0) ^ winding & 1;
+	    return (polarAngle < -ε || polarAngle < ε && d3_geo_areaRingSum < -ε) ^ winding & 1;
 	  }
 	  function d3_geo_clipCircle(radius) {
 	    var cr = Math.cos(radius), smallRadius = cr > 0, notHemisphere = abs(cr) > ε, interpolate = d3_geo_circleInterpolate(radius, 6 * d3_radians);
@@ -10529,14 +10530,103 @@
 /***/ function(module, exports) {
 
 	// shim for using process in browser
-
 	var process = module.exports = {};
+
+	// cached from whatever global is present so that test runners that stub it
+	// don't break things.  But we need to wrap it in a try catch in case it is
+	// wrapped in strict mode code which doesn't define any globals.  It's inside a
+	// function because try/catches deoptimize in certain engines.
+
+	var cachedSetTimeout;
+	var cachedClearTimeout;
+
+	function defaultSetTimout() {
+	    throw new Error('setTimeout has not been defined');
+	}
+	function defaultClearTimeout () {
+	    throw new Error('clearTimeout has not been defined');
+	}
+	(function () {
+	    try {
+	        if (typeof setTimeout === 'function') {
+	            cachedSetTimeout = setTimeout;
+	        } else {
+	            cachedSetTimeout = defaultSetTimout;
+	        }
+	    } catch (e) {
+	        cachedSetTimeout = defaultSetTimout;
+	    }
+	    try {
+	        if (typeof clearTimeout === 'function') {
+	            cachedClearTimeout = clearTimeout;
+	        } else {
+	            cachedClearTimeout = defaultClearTimeout;
+	        }
+	    } catch (e) {
+	        cachedClearTimeout = defaultClearTimeout;
+	    }
+	} ())
+	function runTimeout(fun) {
+	    if (cachedSetTimeout === setTimeout) {
+	        //normal enviroments in sane situations
+	        return setTimeout(fun, 0);
+	    }
+	    // if setTimeout wasn't available but was latter defined
+	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+	        cachedSetTimeout = setTimeout;
+	        return setTimeout(fun, 0);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedSetTimeout(fun, 0);
+	    } catch(e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+	            return cachedSetTimeout.call(null, fun, 0);
+	        } catch(e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+	            return cachedSetTimeout.call(this, fun, 0);
+	        }
+	    }
+
+
+	}
+	function runClearTimeout(marker) {
+	    if (cachedClearTimeout === clearTimeout) {
+	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
+	    }
+	    // if clearTimeout wasn't available but was latter defined
+	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+	        cachedClearTimeout = clearTimeout;
+	        return clearTimeout(marker);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedClearTimeout(marker);
+	    } catch (e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+	            return cachedClearTimeout.call(null, marker);
+	        } catch (e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+	            return cachedClearTimeout.call(this, marker);
+	        }
+	    }
+
+
+
+	}
 	var queue = [];
 	var draining = false;
 	var currentQueue;
 	var queueIndex = -1;
 
 	function cleanUpNextTick() {
+	    if (!draining || !currentQueue) {
+	        return;
+	    }
 	    draining = false;
 	    if (currentQueue.length) {
 	        queue = currentQueue.concat(queue);
@@ -10552,7 +10642,7 @@
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = setTimeout(cleanUpNextTick);
+	    var timeout = runTimeout(cleanUpNextTick);
 	    draining = true;
 
 	    var len = queue.length;
@@ -10569,7 +10659,7 @@
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    clearTimeout(timeout);
+	    runClearTimeout(timeout);
 	}
 
 	process.nextTick = function (fun) {
@@ -10581,7 +10671,7 @@
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        setTimeout(drainQueue, 0);
+	        runTimeout(drainQueue);
 	    }
 	};
 
@@ -11164,6 +11254,7 @@
 
 	/* WEBPACK VAR INJECTION */(function(d3, __webpack_provided_viz_dot_util, __webpack_provided_viz_dot_data) {var circleChart = __webpack_require__(1);
 	var donutChart = __webpack_require__(11);
+	var notifDialog = __webpack_require__(13);
 
 	function addNewRepo(input) {
 	  var start = d3.select('#startdate').node().value;
@@ -11178,6 +11269,7 @@
 
 	  circleChart.addNewRepo(input.username, input.repo);
 	  donutChart.initContributionChart(input.username, input.repo);
+	  notifDialog.init(input.username, input.repo);
 	}
 
 	function getUserRepoFromInput() {
@@ -11201,8 +11293,121 @@
 	addButton.on('click', function() {
 	  addNewRepo(getUserRepoFromInput());
 	});
-
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(5), __webpack_require__(4)))
+
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+	notifDialog = {};
+
+	// Modal dialog
+	notifDialog.emailCount = 0;
+	notifDialog.dialog = document.querySelector('dialog');
+	notifDialog.showModalButton = document.querySelector('.show-modal');
+	if (!notifDialog.dialog.showModal) {
+	  dialogPolyfill.registerDialog(notifDialog.dialog);
+	}
+	notifDialog.showModalButton.addEventListener('click', function () {
+	  notifDialog.dialog.showModal();
+	});
+	notifDialog.dialog.querySelector('.close').addEventListener('click', function () {
+	  notifDialog.dialog.close();
+	});
+
+	notifDialog.dialog.querySelector('#add-email-btn').addEventListener('click', addNewEmailInput);
+	notifDialog.dialog.querySelector('.email-input').addEventListener('keypress', onKeypressEmailInput);
+	notifDialog.dialog.querySelector('.remove-email-btn').addEventListener('click', removeEmailInput);
+
+	/**
+	   * Disable the remove button if there is only 1 input field.
+	   */
+	function disableRemoveButton() {
+	  var emails = notifDialog.dialog.querySelector("#emails");
+	  var btns = emails.querySelectorAll(".remove-email-btn");
+
+	  if (!btns) 
+	    return; // Skip if there is nothing to do
+
+	  // Disable remove button if there is only 1 left
+	  if (btns.length == 1) {
+	    btns[0].setAttribute("disabled", "true");
+	  } else { // Otherwise, remove all disabled buttons
+	    btns.forEach(function (element) {
+	      element.removeAttribute('disabled');
+	    });
+	  }
+	}
+
+	function addNewEmailInput() {
+	  // Get email id, i.e. last email id + 1. Note this is not the html id. Just a number
+	  var emails = notifDialog.dialog.querySelector('#emails');
+	  notifDialog.emailCount += 1;
+
+	  // Create new email
+	  var newEmail = createNewEmailInput(notifDialog.emailCount);
+
+	  // Append and update
+	  emails.appendChild(newEmail);
+
+	  // Disable remove button if any
+	  disableRemoveButton();
+
+	  // Update and focus
+	  componentHandler.upgradeAllRegistered();
+	  newEmail.querySelector(".email-input").focus();
+	}
+
+	function removeEmailInput() {
+	  var emails = notifDialog.dialog.querySelector('#emails');
+	  emails.removeChild(this.parentNode.parentNode);
+
+	  // Disable the remove button
+	  disableRemoveButton();
+	  
+	  // Update and focus
+	  componentHandler.upgradeAllRegistered();
+	  emails.lastElementChild.querySelector(".email-input").focus();
+	}
+
+	function onKeypressEmailInput(e) {
+	  var key = e.which || e.keyCode;
+	  if (key == 13) { // 13 is Enter key
+	    addNewEmailInput();
+	  }
+	}
+
+	function createNewEmailInput(id) {
+	  // Clone email template
+	  var email = document.querySelector("#email-input-template").cloneNode(true);
+	  email.id = "email-" + id;
+	  email.removeAttribute("hidden");
+
+	  // Remove mdl attributes
+	  var upgraded = email.querySelectorAll(':not([data-upgraded=""])');
+	  for (var i = 0; i < upgraded.length; i++) {
+	    upgraded[i].setAttribute("data-upgraded", "");
+	    upgraded[i].className = upgraded[i].className.replace(/is-upgraded/g, '');
+	  }
+
+	  // Upgrade id for inner elements and return
+	  var inputId = "notification-input-" + id;
+	  email.querySelector(".mdl-textfield__input").id = inputId;
+	  email.querySelector(".mdl-textfield__label").setAttribute("for", inputId);
+
+	  // Add event listeners to the remove button and input field
+	  email.querySelector(".remove-email-btn").addEventListener('click', removeEmailInput);
+	  email.querySelector(".mdl-textfield__input").addEventListener('keypress', onKeypressEmailInput);
+	  return email;
+	}
+
+	notifDialog.init = function (userName, repoName) {
+	  notifDialog.userName = userName;
+	  notifDialog.repoName = repoName;
+	  notifDialog.showModalButton.removeAttribute('hidden');
+	}
+
+	module.exports = notifDialog;
 
 /***/ }
 /******/ ]);

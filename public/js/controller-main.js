@@ -1,5 +1,6 @@
 var circleChart = require('./controller-circle');
 var donutChart = require('./controller-donut');
+var notifDialog = require('./controller-notification-dialog');
 
 function addNewRepo(input) {
   var start = d3.select('#startdate').node().value;
@@ -14,6 +15,7 @@ function addNewRepo(input) {
 
   circleChart.addNewRepo(input.username, input.repo);
   donutChart.initContributionChart(input.username, input.repo);
+  notifDialog.init(input.username, input.repo);
 }
 
 function getUserRepoFromInput() {
