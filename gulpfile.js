@@ -41,7 +41,8 @@ gulp.task('build-3219', function() {
           'viz.chart': './chart',
           'viz.ui': './ui',
           'viz.data': './data',
-          'viz.util': './util'
+          'viz.util': './util',
+          '$': 'jquery'
         })
       ]
     }))
