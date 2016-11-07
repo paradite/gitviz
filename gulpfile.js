@@ -27,7 +27,8 @@ gulp.task('build-3219', function() {
     [
       'public/js/controller-circle.js',
       'public/js/controller-donut.js',
-      'public/js/controller-main.js'
+      'public/js/controller-main.js',
+      'public/js/controller-notification-dialog.js'
     ])
     .pipe(webpackstream({
       output: {
