@@ -63,7 +63,7 @@
             <div class="mdl-cell mdl-cell--10-col">
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <label class="mdl-textfield__label" for="notification-input-0">Email</label>
-                <input class="mdl-textfield__input" type="email" id="notification-input-0" autocomplete="on">
+                <input class="email-input mdl-textfield__input" type="email" id="notification-input-0" autocomplete="on">
               </div>
             </div>
             <div class="mdl-cell mdl-cell--2-col">
@@ -131,11 +131,12 @@
   ga('send', 'pageview');
   </script>
 
+  <!-- Template for cloning of input field -->
   <div class="mdl-grid" id="email-input-template" hidden>
     <div class="mdl-cell mdl-cell--10-col">
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
         <label class="mdl-textfield__label" for="notification-input-">Email</label>
-        <input class="mdl-textfield__input" type="email" id="notification-input-" autocomplete="on">
+        <input class="email-input mdl-textfield__input" type="email" id="notification-input-" autocomplete="on">
       </div>
     </div>
     <div class="mdl-cell mdl-cell--2-col">
@@ -144,6 +145,7 @@
       </button>
     </div>
   </div>
+
 </body>
 
 </html>

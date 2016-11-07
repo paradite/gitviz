@@ -11301,7 +11301,29 @@
 	dialog.querySelector('.close').addEventListener('click', function () {
 	  dialog.close();
 	});
-	dialog.querySelector('#add-email-btn').addEventListener('click', function () {
+
+	dialog.querySelector('#add-email-btn').addEventListener('click', addNewEmailInput);
+	dialog.querySelector(".email-input").addEventListener("keypress", onKeypressEmailInput);
+	dialog.querySelector(".remove-email-btn").addEventListener("click", removeEmailInput);
+
+	/**
+	 * Disable the remove button if there is only 1 input field.
+	 */
+	function disableRemoveButton() {
+	  var emails = dialog.querySelector("#emails");
+
+	  // Disable remove button if there is only 1 left
+	  var btns = emails.querySelectorAll(".remove-email-btn");
+	  if (btns && btns.length == 1) {
+	    btns[0].setAttribute("disabled", "true");
+	  } else { // Otherwise, remove all disabled buttons
+	    btns.forEach(function(element) {
+	      element.removeAttribute('disabled'); 
+	    });
+	  }
+	}
+
+	function addNewEmailInput() {
 	  // Get email id, i.e. last email id + 1. Note this is not the html id. Just a number
 	  var emails = dialog.querySelector('#emails');
 	  emailCount += 1;
@@ -11309,35 +11331,34 @@
 	  // Create new email
 	  var newEmail = createNewEmailInput(emailCount);
 
-	  // Remove disabled remove btn
-	  if (emails.querySelector('[disabled]')) {
-	    emails.querySelector('[disabled]').removeAttribute('disabled');
-	  }
+	  // Disable remove button if any
+	  disableRemoveButton();
 
 	  // Append and update
 	  emails.appendChild(newEmail);
 	  componentHandler.upgradeAllRegistered();
-	  newEmail.focus();
-	});
-
-	// Add remove event
-	document.querySelector(".remove-email-btn").addEventListener('click', removeEmailInput);
+	  newEmail.querySelector(".email-input").focus();
+	}
 
 	function removeEmailInput() {
-	  var emails = document.querySelector('#emails');
+	  var emails = dialog.querySelector('#emails');
 	  emails.removeChild(this.parentNode.parentNode);
 	  
-	  // Disable remove button if there is only 1 left
-	  var btns = emails.querySelectorAll(".remove-email-btn");
-	  if (btns && btns.length == 1) {
-	    btns[0].setAttribute("disabled", "true");
-	  }
-
+	  // Disable the remove button
+	  disableRemoveButton();
 	  componentHandler.upgradeAllRegistered();
 	}
+
+	function onKeypressEmailInput(e) {
+	  var key = e.which || e.keyCode;
+	  if (key == 13) { // 13 is Enter key
+	    addNewEmailInput();
+	  }
+	}
+
 	function createNewEmailInput(id) {
 	  // Clone email template
-	  var email = document.getElementById("email-input-template").cloneNode(true);
+	  var email = document.querySelector("#email-input-template").cloneNode(true);
 	  email.id = "email-" + id;
 	  email.removeAttribute("hidden");
 
@@ -11353,59 +11374,11 @@
 	  email.querySelector(".mdl-textfield__input").id = inputId;
 	  email.querySelector(".mdl-textfield__label").setAttribute("for", inputId);
 
-	  // Add event listener to the remove button
+	  // Add event listeners to the remove button and input field
 	  email.querySelector(".remove-email-btn").addEventListener('click', removeEmailInput);
+	  email.querySelector(".mdl-textfield__input").addEventListener('keypress', onKeypressEmailInput);
 	  return email;
 	}
-	// function createNewEmailInput(id) {
-	//   // Email grid wrapper
-	//   var email = document.createElement("div");
-	//   email.className = "mdl-grid";
-	//   email.id = "email-" + id;
-
-	//   // Input fields
-	//   var emailInput = document.createElement("div");
-	//   emailInput.className = "mdl-cell mdl-cell--10-col";
-
-	//   // Input group with input field and label
-	//   var inputGroup = document.createElement("div");
-	//   inputGroup.className = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label";
-	  
-	//   var input = document.createElement("input");
-	//   input.className = "mdl-textfield__input";
-	//   input.type = "email";
-	//   input.autocomplete = "on";
-	//   input.id = "notification-input-" + id;
-
-	//   var label = document.createElement("label");
-	//   label.className = "mdl-textfield__label";
-	//   label.setAttribute("for", input.id);
-	//   label.innerHTML = "Email";
-
-	//   inputGroup.appendChild(label);
-	//   inputGroup.appendChild(input);
-	//   emailInput.appendChild(inputGroup);
-
-	//   // Remove button
-	//   var removeBtn = document.createElement("div");
-	//   removeBtn.className = "mdl-cell mdl-cell--2-col";
-	  
-	//   var button = document.createElement("button");
-	//   button.className = "mdl-button mdl-js-button mdl-button--icon mdl-button--colored";
-	//   var icon = document.createElement("i");
-	//   icon.className = "material-icons";
-	//   icon.innerHTML = "remove";
-	//   button.appendChild(icon);
-
-	//   removeBtn.appendChild(button);
-
-	//   // Append to parent element
-	//   email.appendChild(emailInput);
-	//   email.appendChild(removeBtn);
-
-	//   return email;
-	// }
-
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(5), __webpack_require__(4)))
 
 /***/ }
