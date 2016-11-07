@@ -12,9 +12,6 @@ function addNewRepo(input) {
     viz.data.removeRangeRestriction();
   }
 
-  console.log(input.username);
-  console.log(input.repo);
-
   circleChart.addNewRepo(input.username, input.repo);
   donutChart.initContributionChart(input.username, input.repo);
 }

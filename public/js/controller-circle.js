@@ -59,7 +59,6 @@ circleChart.addNewUser = function(user) {
 };
 
 circleChart.addNewRepo = function(username, repo, duration) {
-  console.log(duration);
   circleChart.duration = duration;
   viz.ui.showSpinner();
   viz.data.getRepoCommitsDetail(username, repo, handleRepoCommits);

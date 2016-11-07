@@ -114,7 +114,6 @@
 	};
 
 	circleChart.addNewRepo = function(username, repo, duration) {
-	  console.log(duration);
 	  circleChart.duration = duration;
 	  __webpack_provided_viz_dot_ui.showSpinner();
 	  __webpack_provided_viz_dot_data.getRepoCommitsDetail(username, repo, handleRepoCommits);
@@ -10073,7 +10072,6 @@
 	        }
 	        _commits[username].push(commitObj.commit);
 	      });
-	      console.log(_commits);
 	      for (username in _commits) {
 	        _fetchCommitDetails({username: username}, cb);
 	      }
@@ -11048,8 +11046,7 @@
 	      return midAngle(d) < Math.PI ? 'start' : 'end';
 	    })
 	    .style('font-size', function(d) {
-	      console.log(Math.log(d.data.total));
-	      return Math.log(d.data.total) * 3 + 'px';
+	      return (Math.log(d.data.total) + 11) + 'px';
 	    })
 	    .text(formatText);
 
@@ -11071,14 +11068,24 @@
 	}
 
 	function filterImportant(data) {
+	  if (data.length < 5) {
+	    return data;
+	  }
 	  // console.log('filtering:');
 	  // console.log(data);
-
-	  // Filtering contributor with less than 2 total to Other
+	  var max = -1;
+	  data.forEach(function(d) {
+	    if (d.total > max) {
+	      max = d.total;
+	    }
+	  });
+	  // 8% threshold as the top
+	  var threshold = max * 0.08;
+	  console.log(threshold);
 	  var filteredData = [];
 	  var otherTotal = 0;
 	  data.forEach(function(d) {
-	    if (d.total > COMMITS_CULL_THRESHOLD) {
+	    if (d.total > threshold) {
 	      filteredData.push(d);
 	    } else {
 	      otherTotal += d.total;
@@ -11168,9 +11175,6 @@
 	  } else {
 	    __webpack_provided_viz_dot_data.removeRangeRestriction();
 	  }
-
-	  console.log(input.username);
-	  console.log(input.repo);
 
 	  circleChart.addNewRepo(input.username, input.repo);
 	  donutChart.initContributionChart(input.username, input.repo);

@@ -70,7 +70,6 @@ var data = (function() {
         }
         _commits[username].push(commitObj.commit);
       });
-      console.log(_commits);
       for (username in _commits) {
         _fetchCommitDetails({username: username}, cb);
       }
