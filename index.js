@@ -24,14 +24,6 @@ app.use(require('express-session')({ secret: 'gitvizvizvizviz', resave: false, s
 app.use(passport.initialize());
 app.use(passport.session());
 
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-
-  res.redirect('/login');
-}
-
 var API_BASE_URL = 'https://api.github.com';
 // var API_USER = '/users/';
 // var API_PUBLIC_EVENTS = '/events/public';
@@ -58,6 +50,11 @@ app.get('/app', function(req, res) {
 
 app.get('/3219', require('connect-ensure-login').ensureLoggedIn(), function(req, res) {
   res.sendFile(path.join(__dirname, 'public', '3219.html'));
+});
+
+// Hack solution to get the current user from client side.
+app.get('/api/current-user', require('connect-ensure-login').ensureLoggedIn(), function(req, res) {
+  res.json(req.user);
 });
 
 // Authentication routes

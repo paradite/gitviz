@@ -27,7 +27,7 @@ module.exports.findUserById = function(id, done) {
   })
 }
 
-module.exports.validateUser = function (req, email, password, done) {
+module.exports.login = function (req, email, password, done) {
   var params = {
     "TableName": tableName,
     "IndexName": "email-index",
@@ -44,11 +44,31 @@ module.exports.validateUser = function (req, email, password, done) {
     if (data.Items.length == 0) {
       return done(null, false, req.flash('loginMessage', 'No user found.')); // req.flash is the way to set flashdata using connect-flash
     }
-    ddb.getItem({ "TableName": tableName, "Key": { "id": data.Items[0]["id"] } }, function (err, data) {
+    
+    var userParams = { 
+      "TableName": tableName, 
+      "Key": { 
+        "id": data.Items[0]["id"] 
+      } 
+    };
+    ddb.getItem(userParams, function (err, data) {
       if (err) { return done(err); }
       if (!bcrypt.compareSync(password, data.Item.pw.S)) {
         return done(null, false, req.flash('loginMessage', 'Oops! Wrong email or password.')); // create the loginMessage and save it to session as flashdata
       } else {
+        // Update last login timestamp
+        userParams["UpdateExpression"] = "SET #lastLogin = :ts";
+        userParams["ExpressionAttributeNames"] = {
+          "#lastLogin": "lastLogin"
+        };
+        userParams["ExpressionAttributeValues"] = { 
+          ":ts": { "N": new Date().getTime().toString() } 
+        };
+        userParams["ReturnValues"] = "UPDATED_NEW";
+        console.log(userParams);
+        ddb.updateItem(userParams, function(err, data) {
+          if (err) { console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2)); }
+        });
         return done(null, data.Item);
       }
     })

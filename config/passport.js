@@ -47,6 +47,6 @@ module.exports = function(passport) {
     passReqToCallback : true // allows us to pass back the entire request to the callback
   },
   function(req, email, password, done) { // callback with email and password from our form
-    User.validateUser(req, email, password, done);
+    User.login(req, email, password, done);
   }));
 };
