@@ -17,6 +17,19 @@ notifDialog.dialog.querySelector('.close').addEventListener('click', function ()
 notifDialog.dialog.querySelector('#add-email-btn').addEventListener('click', addNewEmailInput);
 notifDialog.dialog.querySelector('.email-input').addEventListener('keypress', onKeypressEmailInput);
 notifDialog.dialog.querySelector('.remove-email-btn').addEventListener('click', removeEmailInput);
+notifDialog.dialog.querySelector('#subscribe-btn').addEventListener('click', subscribeEmails);
+
+function subscribeEmails() {
+  // Get the valid subscribing emails
+  var inputs = notifDialog.dialog.querySelectorAll(".email-input.is-dirty:not(.is-invalid)");
+  var emails = [];
+  for (var i = 0; i < inputs.length; i++) {
+    emails.push(inputs[i].querySelector('.email-input').value);
+  }
+
+  // Make server call to update subscribing emails for current user.
+  console.log("Request to update subscribing emails.");
+}
 
 /**
    * Disable the remove button if there is only 1 input field.
