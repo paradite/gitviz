@@ -1,6 +1,9 @@
 {
   "name": "gitviz",
   "version": "1.0.0",
+  "engines": {
+    "node": "6.11.x"
+  },
   "description": "Visually compare GitHub contributions",
   "main": "index.js",
   "scripts": {
